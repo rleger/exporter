@@ -36,9 +36,9 @@
                     @foreach($entries as $entry)
                     <tr class="even:bg-gray-50">
 
-                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">{{ $entry->name }}</td>
-
                       <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">{{ $entry->lastname }}</td>
+
+                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">{{ $entry->name }}</td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->birthdate }}</td>
 
