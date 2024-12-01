@@ -6,7 +6,7 @@
   </x-slot>
 
   <div class="py-12">
-    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-8xl sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
 
@@ -17,9 +17,9 @@
                 <table class="min-w-full divide-y divide-gray-300">
                   <thead>
                     <tr>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prénom</th>
-
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nom</th>
+
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prénom</th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date de Naissance</th>
 
@@ -28,6 +28,8 @@
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
+
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Propriétaire</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white">
@@ -45,6 +47,8 @@
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->email }}</td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->description }}</td>
+
+                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->calendar->user->name }} {{ $entry->calendar->name }}</td>
 
                     </tr>
                     @endforeach

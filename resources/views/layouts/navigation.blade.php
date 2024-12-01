@@ -13,7 +13,7 @@
         <!-- Navigation Links -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
           <x-nav-link :href="route('dashboard')" :active="request()->routeis('dashboard')">
-            {{ __('dashboard') }}
+            {{ __('Dashboard') }}
           </x-nav-link>
 
           <x-nav-link :href="route('entries.index')" :active="request()->routeis('entries.index')">
@@ -77,6 +77,15 @@
       <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
         {{ __('Dashboard') }}
       </x-responsive-nav-link>
+
+      <x-responsive-nav-link :href="route('entries.index')" :active="request()->routeis('entries.index')">
+        {{ __('Entrées') }}
+      </x-responsive-nav-link>
+
+      <x-responsive-nav-link :href="route('calendars.index')" :active="request()->routeis('calendars.index')">
+        {{ __('Calendrier') }}
+      </x-responsive-nav-link>
+
     </div>
 
     <!-- Responsive Settings Options -->
