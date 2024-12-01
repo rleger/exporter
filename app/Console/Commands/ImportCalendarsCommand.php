@@ -44,7 +44,14 @@ class ImportCalendarsCommand extends Command
                     $prenom = array_pop($nameParts); // The first name is the last word
                     $nom = implode(' ', $nameParts); // The last name is the rest
                     $nom = strtoupper($nom); // Capitalize the last name
-                    $naissance = Carbon::createFromFormat('d.m.Y', $matches[2])->format('Y-m-d');
+
+                    // Gestion de Carbon avec fallback à null en cas d'échec
+                    try {
+                        $birthdate = Carbon::createFromFormat('d.m.Y', $matches[3])->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $this->warn("Format de date invalide pour l'événement : ".$summary);
+                        $birthdate = null;
+                    }
                     $eventDescription = $matches[3];
                 }
 
