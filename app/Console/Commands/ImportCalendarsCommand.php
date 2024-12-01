@@ -37,7 +37,7 @@ class ImportCalendarsCommand extends Command
                 // Vérifier si SUMMARY et DESCRIPTION existent
                 if (!isset($event->SUMMARY) || !isset($event->DESCRIPTION)) {
                     $this->warn('Événement sans SUMMARY ou DESCRIPTION. Ignoré.');
-                    Log::warning('Événement sans SUMMARY ou DESCRIPTION.', ['event' => $event]);
+                    Log::warning('Événement sans SUMMARY ou DESCRIPTION.', ['event' => $event->serialize()]);
                     continue;
                 }
 
@@ -53,12 +53,12 @@ class ImportCalendarsCommand extends Command
                 $birthdate = null;
                 $eventDescription = '';
 
-                // Expression régulière améliorée pour gérer les LASTNAME à plusieurs mots et prénoms composés
-                $regex = '/^([A-ZÀ-Ÿ\s\-]+) ((?:[A-ZÀ-Ÿ][a-zà-ÿ\-]+(?:\s[A-ZÀ-Ÿ][a-zà-ÿ\-]+)*)) \((\d{2}\.\d{2}\.\d{4})\)\r?\n \[(.+?)\]/u';
+                // Expression régulière améliorée pour gérer les LASTNAME à plusieurs mots, prénoms composés et parenthèses
+                $regex = '/^([A-ZÀ-Ÿ\s\-\(\)]+) ((?:[A-ZÀ-Ÿ][a-zà-ÿ\-]+(?:\s[A-ZÀ-Ÿ][a-zà-ÿ\-]+)*)) \((\d{2}\.\d{2}\.\d{4})\)\r?\n \[(.+?)\]/u';
 
                 if (preg_match($regex, $summary, $matches)) {
-                    $lastname = trim($matches[1]);
-                    $firstname = trim($matches[2]);
+                    $lastname = trim($matches[1]);       // e.g., "LAMBELET (YARMYSH)"
+                    $firstname = trim($matches[2]);      // e.g., "Anastasia"
 
                     // Gestion de Carbon avec fallback à null en cas d'échec
                     try {
@@ -73,7 +73,7 @@ class ImportCalendarsCommand extends Command
                 } else {
                     // Loguer le résumé non conforme
                     $this->warn('Format inattendu du résumé : '.$summary);
-                    Log::warning('Format inattendu du résumé : '.$summary);
+                    Log::warning('Format inattendu du résumé : '.$summary, ['raw_summary' => $summary]);
                     continue;
                 }
 
@@ -87,6 +87,19 @@ class ImportCalendarsCommand extends Command
                 $email = '';
                 if (preg_match('/Email ?: ([^\n]+)/i', $description, $matches)) {
                     $email = trim($matches[1]);
+                }
+
+                // Vérifier que tous les champs nécessaires sont présents
+                if (empty($lastname) || empty($firstname) || empty($email) || empty($tel)) {
+                    $this->warn('Événement incomplet : '.$summary);
+                    Log::warning('Événement incomplet.', [
+                        'summary'   => $summary,
+                        'lastname'  => $lastname,
+                        'firstname' => $firstname,
+                        'email'     => $email,
+                        'tel'       => $tel,
+                    ]);
+                    continue;
                 }
 
                 // Créer ou mettre à jour l'entrée
