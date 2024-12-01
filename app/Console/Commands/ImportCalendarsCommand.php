@@ -34,18 +34,18 @@ class ImportCalendarsCommand extends Command
             }
 
             foreach ($vcalendar->VEVENT as $event) {
-                // Vérifier si SUMMARY et DESCRIPTION existent
+                // Verify that SUMMARY and DESCRIPTION exist
                 if (!isset($event->SUMMARY) || !isset($event->DESCRIPTION)) {
                     $this->warn('Événement sans SUMMARY ou DESCRIPTION. Ignoré.');
                     Log::warning('Événement sans SUMMARY ou DESCRIPTION.', ['event' => $event->serialize()]);
                     continue;
                 }
 
-                // Extraire les données de l'événement
+                // Extract event data
                 $summary = $event->SUMMARY->getValue();
                 $description = $event->DESCRIPTION->getValue();
 
-                // Traiter le champ SUMMARY
+                // Process the SUMMARY field
                 $summary = str_replace('\\n', "\n", $summary);
 
                 $lastname = '';
@@ -53,43 +53,64 @@ class ImportCalendarsCommand extends Command
                 $birthdate = null;
                 $eventDescription = '';
 
-                // Expression régulière améliorée pour gérer les LASTNAME à plusieurs mots, prénoms composés et parenthèses
-                $regex = '/^([A-ZÀ-Ÿ\s\-\(\)]+) ((?:[A-ZÀ-Ÿ][a-zà-ÿ\-]+(?:\s[A-ZÀ-Ÿ][a-zà-ÿ\-]+)*)) \((\d{2}\.\d{2}\.\d{4})\)\r?\n \[(.+?)\]/u';
+                // Adjusted regex
+                $regex = '/^(.+?) \((\d{2}\.\d{2}\.\d{4})\)\r?\n \[(.+?)\]/u';
 
                 if (preg_match($regex, $summary, $matches)) {
-                    $lastname = trim($matches[1]);       // e.g., "LAMBELET (YARMYSH)"
-                    $firstname = trim($matches[2]);      // e.g., "Anastasia"
+                    $fullName = trim($matches[1]);
 
-                    // Gestion de Carbon avec fallback à null en cas d'échec
+                    // Split and classify name parts
+                    $nameParts = preg_split('/\s+/', $fullName);
+
+                    $lastnameParts = [];
+                    $firstnameParts = [];
+
+                    foreach ($nameParts as $part) {
+                        if (mb_strtoupper($part, 'UTF-8') === $part) {
+                            // Uppercase => Last name
+                            $lastnameParts[] = $part;
+                        } else {
+                            // Not all uppercase => First name
+                            $firstnameParts[] = $part;
+                        }
+                    }
+
+                    $lastname = implode(' ', $lastnameParts);
+                    $firstname = implode(' ', $firstnameParts);
+
+                    // Ensure last name is fully uppercase
+                    $lastname = mb_strtoupper($lastname, 'UTF-8');
+
+                    // Handle birthdate
                     try {
-                        $birthdate = Carbon::createFromFormat('d.m.Y', $matches[3])->format('Y-m-d');
+                        $birthdate = Carbon::createFromFormat('d.m.Y', $matches[2])->format('Y-m-d');
                     } catch (\Exception $e) {
                         $this->warn("Format de date invalide pour l'événement : ".$summary);
                         Log::warning("Format de date invalide pour l'événement : ".$summary, ['error' => $e->getMessage()]);
                         $birthdate = null;
                     }
 
-                    $eventDescription = $matches[4];
+                    $eventDescription = $matches[3];
                 } else {
-                    // Loguer le résumé non conforme
+                    // Log non-conforming summary
                     $this->warn('Format inattendu du résumé : '.$summary);
                     Log::warning('Format inattendu du résumé : '.$summary, ['raw_summary' => $summary]);
                     continue;
                 }
 
-                // Extraire Téléphone
+                // Extract Telephone
                 $tel = '';
                 if (preg_match('/Tel ?: ([^\n]+)/i', $description, $matches)) {
                     $tel = trim($matches[1]);
                 }
 
-                // Extraire Email
+                // Extract Email
                 $email = '';
                 if (preg_match('/Email ?: ([^\n]+)/i', $description, $matches)) {
                     $email = trim($matches[1]);
                 }
 
-                // Vérifier que tous les champs nécessaires sont présents
+                // Check that all necessary fields are present
                 if (empty($lastname) || empty($firstname) || empty($email) || empty($tel)) {
                     $this->warn('Événement incomplet : '.$summary);
                     Log::warning('Événement incomplet.', [
@@ -102,7 +123,7 @@ class ImportCalendarsCommand extends Command
                     continue;
                 }
 
-                // Créer ou mettre à jour l'entrée
+                // Create or update the entry
                 Entry::updateOrCreate(
                     [
                         'calendar_id' => $calendar->id,
