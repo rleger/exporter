@@ -38,11 +38,14 @@ class ImportCalendarsCommand extends Command
                 $naissance = null;
                 $eventDescription = '';
 
-                if (preg_match('/^(.+?) (.+?) \((.+?)\)\n \[(.+?)\]/u', $summary, $matches)) {
-                    $nom = trim($matches[1]);
-                    $prenom = trim($matches[2]);
-                    $naissance = Carbon::createFromFormat('d.m.Y', $matches[3])->format('Y-m-d');
-                    $eventDescription = $matches[4];
+                if (preg_match('/^(.+?) \((.+?)\)\n \[(.+?)\]/u', $summary, $matches)) {
+                    $fullName = trim($matches[1]);
+                    $nameParts = explode(' ', $fullName);
+                    $prenom = array_pop($nameParts); // The first name is the last word
+                    $nom = implode(' ', $nameParts); // The last name is the rest
+                    $nom = strtoupper($nom); // Capitalize the last name
+                    $naissance = Carbon::createFromFormat('d.m.Y', $matches[2])->format('Y-m-d');
+                    $eventDescription = $matches[3];
                 }
 
                 // Extraire Téléphone
