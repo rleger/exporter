@@ -48,6 +48,7 @@ class ImportCalendarsCommand extends Command
 
                 // Remplacer les séquences '\n' par des sauts de ligne réels
                 $summary = str_replace('\\n', "\n", $summary);
+                $description = str_replace('\\n', "\n", $description);
 
                 $lastname = '';
                 $firstname = '';
@@ -113,15 +114,19 @@ class ImportCalendarsCommand extends Command
                     $email = '';
                 }
 
+                // Extraire la partie restante de la DESCRIPTION
+                // Supprimer Tel et Email de la description
+                $remainingDescription = preg_replace('/Tel ?: [^\n]+\n?/', '', $description);
+                $remainingDescription = preg_replace('/Email ?: [^\n]+\n?/', '', $remainingDescription);
+                $remainingDescription = trim($remainingDescription);
+
                 // Vérifier que tous les champs nécessaires sont présents
-                if (empty($lastname) || empty($firstname) || empty($email) || empty($tel)) {
+                if (empty($lastname) || empty($firstname)) {
                     $this->warn('Événement incomplet : '.$summary);
                     Log::warning('Événement incomplet.', [
                         'summary'   => $summary,
                         'lastname'  => $lastname,
                         'firstname' => $firstname,
-                        'email'     => $email,
-                        'tel'       => $tel,
                     ]);
                     continue;
                 }
@@ -144,26 +149,22 @@ class ImportCalendarsCommand extends Command
                 $this->info("Événement importé : {$firstname} {$lastname}");
                 Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);
 
-                // Extraire la date de début de l'événement
-                $dtstart = null;
-                if (isset($event->DTSTART)) {
-                    $dtstart = $event->DTSTART->getDateTime();
-                }
+                // Extraire la date de début et de fin de l'événement
+                $dtstart = isset($event->DTSTART) ? $event->DTSTART->getDateTime() : null;
+                $dtend = isset($event->DTEND) ? $event->DTEND->getDateTime() : null;
 
                 // Extraire les champs CREATED et LAST-MODIFIED
                 $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
-
-                $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
-
-                $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
-
                 $lastModified = isset($event->{'LAST-MODIFIED'}) ? $event->{'LAST-MODIFIED'}->getDateTime() : null;
 
-                // Vérifier que la date est présente
+                // Vérifier que la date de début est présente
                 if ($dtstart) {
                     // Préparer les données pour Appointment
                     $appointmentData = [
-                        'subject' => $entry->description,
+                        'subject'     => $entry->description,
+                        'description' => $remainingDescription,
+                        'start_date'  => $dtstart,
+                        'end_date'    => $dtend,
                     ];
 
                     if ($createdAt) {

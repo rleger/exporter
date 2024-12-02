@@ -18,6 +18,13 @@
               Sujet
             </th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+              Description
+            </th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+              Horaires
+            </th>
+
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
               Changements
             </th>
 
@@ -35,6 +42,19 @@
               {{ $appointment->subject }}
             </td>
             <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+              {{ $appointment->description }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+              <div class="flex flex-col">
+                <span class="text-xs text-gray-500">
+                  {{ $appointment->start_date->toTimeString('minute') }}
+                </span>
+                <span class="text-xs text-gray-500">
+                  {{ $appointment->end_date->toTimeString('minute') }}
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
               <div class="flex flex-col">
                 <span class="text-xs text-gray-500">
                   Crée : {{ $appointment->created_at->diffForHumans() }}
@@ -44,6 +64,7 @@
                 </span>
               </div>
             </td>
+
 
           </tr>
           @endforeach
