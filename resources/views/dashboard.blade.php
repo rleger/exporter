@@ -8,12 +8,9 @@
   <div class="py-12">
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900">
-          {{ __("You're logged in!") }}
-        </div>
-        <div class="p-6 text-gray-900">
+        <div class="p-2 text-gray-900">
           @if($calendars->count())
-          <div class="flow-root mt-8">
+          <div class="flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <table class="min-w-full divide-y divide-gray-300">
@@ -65,9 +62,9 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                   @foreach($recentAppointments as $appointment)
                   <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                    <td class="px-6 py-4 text-sm whitespace-nowrap">
                       <div class="flex flex-col">
-                        <span>
+                        <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
                           {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
                         </span>
                         <span class="text-xs text-gray-500">
@@ -75,10 +72,11 @@
                         </span>
                       </div>
                     </td>
+
                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                       <div class="flex flex-col">
                         <span class="font-semibold">
-                          <a class="text-gray-900 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                          <a class="text-indigo-600 hover:text-indigo-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
                             {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                           </a>
                         </span>
@@ -114,9 +112,9 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                   @foreach($updatedAppointments as $appointment)
                   <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                    <td class="px-6 py-4 text-sm whitespace-nowrap">
                       <div class="flex flex-col">
-                        <span>
+                        <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
                           {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
                         </span>
                         <span class="text-xs text-gray-500">
@@ -124,10 +122,11 @@
                         </span>
                       </div>
                     </td>
+
                     <td class="px-6 py-4 text-sm whitespace-nowrap">
                       <div class="flex flex-col">
                         <span class="font-semibold">
-                          <a class="text-gray-900 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                          <a class="text-indigo-600 hover:text-indigo-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
                             {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                           </a>
                         </span>
