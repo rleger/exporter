@@ -43,8 +43,6 @@
                       }
                       @endphp
 
-
-
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         <a href="{{ sortLink('lastname', 'Prénom', $sort, $direction, $search) }}" class="flex items-center">
                           Nom
@@ -61,6 +59,7 @@
                           @endif
                         </a>
                       </th>
+
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         <a href="{{ sortLink('name', 'Nom', $sort, $direction, $search) }}" class="flex items-center">
                           Prénom
@@ -99,6 +98,29 @@
                         <a href="{{ sortLink('appointments_count', 'Nb', $sort, $direction, $search) }}" class="flex items-center">
                           Nb
                           @if($sort === 'appointments_count')
+                          @if($direction === 'asc')
+                          <!-- Icône pour le tri ascendant -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                          </svg>
+                          @else
+                          <!-- Icône pour le tri descendant -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                          @endif
+                          @endif
+                        </a>
+                      </th>
+
+                      {{-- <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        Durée
+                      </th> --}}
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        <a href="{{ sortLink('total_duration', 'Durée', $sort, $direction, $search) }}" class="flex items-center">
+                          Durée
+                          @if($sort === 'total_duration')
+
                           @if($direction === 'asc')
                           <!-- Icône pour le tri ascendant -->
                           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,7 +186,6 @@
                   <tbody class="bg-white">
                     @foreach($entries as $entry)
                     <tr class="even:bg-gray-50">
-
                       <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">
                         <a class="text-gray-800 hover:text-gray-700 hover:underline" href="{{ route('appointments.show', $entry->id) }}">
                           {{ $entry->lastname }}
@@ -184,6 +205,10 @@
                         <a href="{{ route('appointments.show', $entry->id) }}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 rounded-full bg-gray-50 ring-1 ring-inset ring-gray-500/10 hover:bg-gray-200">
                           {{ $entry->appointments_count }}
                         </a>
+                      </td>
+
+                      <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                        {{ $entry->total_duration }}
                       </td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
