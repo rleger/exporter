@@ -36,9 +36,6 @@
                   </tbody>
                 </table>
               </div>
-              <div class="px-4 py-4 sm:px-6">
-                <!-- Pagination si nécessaire -->
-              </div>
             </div>
           </div>
           @else
