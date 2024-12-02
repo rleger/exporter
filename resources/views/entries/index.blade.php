@@ -164,8 +164,17 @@
                   <tbody class="bg-white">
                     @foreach($entries as $entry)
                     <tr class="even:bg-gray-50">
-                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">{{ $entry->lastname }}</td>
-                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">{{ $entry->name }}</td>
+
+                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">
+                        <a class="text-gray-800 hover:text-gray-700 hover:underline" href="{{ route('appointments.show', $entry->id) }}">
+                          {{ $entry->lastname }}
+                        </a>
+                      </td>
+                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">
+                        <a class="text-gray-800 hover:text-gray-700 hover:underline" href="{{ route('appointments.show', $entry->id) }}">
+                          {{ $entry->name }}
+                        </a>
+                      </td>
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                         {{ \Carbon\Carbon::parse($entry->birthdate)->format('d/m/Y') }}
                         ({{ \Carbon\Carbon::parse($entry->birthdate)->age }} ans)

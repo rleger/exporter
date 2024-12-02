@@ -23,7 +23,9 @@
           @foreach($entry->appointments as $appointment)
           <tr>
             <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-              {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+              <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
+                {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+              </span>
             </td>
             <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
               {{ $appointment->subject }}

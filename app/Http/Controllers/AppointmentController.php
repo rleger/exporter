@@ -8,7 +8,9 @@ class AppointmentController extends Controller
 {
     public function show($entryId)
     {
-        $entry = Entry::with('appointments')->findOrFail($entryId);
+        $entry = Entry::with(['appointments' => function ($query) {
+            $query->orderBy('date', 'desc');
+        }])->findOrFail($entryId);
 
         return view('appointments.show', compact('entry'));
     }
