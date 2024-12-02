@@ -50,7 +50,14 @@
             <tr>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                 <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
-                  {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+                  <div class="flex flex-col">
+                    <span>
+                      {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+                    </span>
+                    <span class="text-xs text-gray-500">
+                      {{ \Carbon\Carbon::parse($appointment->date)->diffForHumans() }}
+                    </span>
+                  </div>
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
