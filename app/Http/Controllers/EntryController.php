@@ -55,6 +55,7 @@ class EntryController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('lastname', 'like', "%{$search}%")
+                  ->orWhere('tel', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
