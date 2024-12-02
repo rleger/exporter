@@ -28,7 +28,9 @@
                       <td class="py-4 pl-4 pr-3 text-sm text-gray-500 whitespace-nowrap">
                         {{ $calendar->user->name ?? 'Utilisateur inconnu' }}
                       </td>
-                      <td class="py-4 pl-4 pr-3 text-sm text-gray-500 whitespace-nowrap">{{ $calendar->entries_count }}</td>
+                      <td class="py-4 pl-4 pr-3 text-sm text-gray-500 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 rounded-md bg-gray-50 ring-1 ring-inset ring-gray-500/10">{{ $calendar->entries_count }}</span>
+                      </td>
                     </tr>
                     @endforeach
                   </tbody>

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Calendar;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 
 class DashboardController extends Controller
@@ -24,7 +25,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $threeDaysAgo = Carbon::now()->subDays(3);
 
@@ -48,8 +49,9 @@ class DashboardController extends Controller
                 $query->whereIn('calendar_id', $calendarIds);
             })
             ->where('date', '>=', $threeDaysAgo)
+            ->whereColumn('created_at', '=', 'updated_at')
+            ->orderBy('created_at', 'desc')
             ->orderBy('date', 'asc')
-            ->orderBy('created_at', 'asc')
             ->take(10)
             ->get();
 
@@ -60,8 +62,8 @@ class DashboardController extends Controller
             })
             ->where('date', '>=', $threeDaysAgo)
             ->whereColumn('created_at', '!=', 'updated_at')
+            ->orderBy('updated_at', 'desc')
             ->orderBy('date', 'asc')
-            ->orderBy('updated_at', 'asc')
             ->take(10)
             ->get();
 
