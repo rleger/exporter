@@ -17,7 +17,7 @@ class EntryController extends Controller
         $direction = $request->input('direction', 'asc');
 
         // Définir les colonnes autorisées pour le tri
-        $allowedSorts = ['name', 'lastname', 'created_at', 'updated_atj', 'birthdate', 'appointments_count'];
+        $allowedSorts = ['name', 'lastname', 'created_at', 'updated_at', 'birthdate', 'appointments_count'];
 
         // Valider les paramètres de tri
         if (!in_array($sort, $allowedSorts)) {
