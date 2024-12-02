@@ -60,7 +60,6 @@
                   <tr>
                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Sujet</th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -76,11 +75,17 @@
                         </span>
                       </div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                      {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                      {{ $appointment->subject }}
+                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                      <div class="flex flex-col">
+                        <span class="font-semibold">
+                          <a class="text-gray-900 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                            {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                          </a>
+                        </span>
+                        <span>
+                          {{ $appointment->subject }}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                   @endforeach
@@ -104,7 +109,6 @@
                   <tr>
                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Sujet</th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -120,12 +124,19 @@
                         </span>
                       </div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                      {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                    <td class="px-6 py-4 text-sm whitespace-nowrap">
+                      <div class="flex flex-col">
+                        <span class="font-semibold">
+                          <a class="text-gray-900 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                            {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                          </a>
+                        </span>
+                        <span>
+                          {{ $appointment->subject }}
+                        </span>
+                      </div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                      {{ $appointment->subject }}
-                    </td>
+
                   </tr>
                   @endforeach
                 </tbody>
