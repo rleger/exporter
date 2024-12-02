@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Calendar;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
@@ -27,6 +28,18 @@ class DashboardController extends Controller
             ->withCount('entries')
             ->get();
 
-        return view('dashboard', compact('calendars'));
+        // Récupérer les 20 derniers rendez-vous ajoutés
+        $recentAppointments = Appointment::with('entry')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Récupérer les 20 derniers rendez-vous modifiés
+        $updatedAppointments = Appointment::with('entry')
+            ->orderBy('updated_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('dashboard', compact('calendars', 'recentAppointments', 'updatedAppointments'));
     }
 }

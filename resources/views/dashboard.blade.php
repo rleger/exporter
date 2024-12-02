@@ -48,6 +48,96 @@
         </div>
 
       </div>
+      <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
+        <!-- Colonne des derniers rendez-vous ajoutés -->
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+          <div class="p-6 bg-white border-b border-gray-200">
+            <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Derniers rendez-vous ajoutés</h3>
+            @if($recentAppointments->count())
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Sujet</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  @foreach($recentAppointments as $appointment)
+                  <tr>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      <div class="flex flex-col">
+                        <span>
+                          {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+                        </span>
+                        <span class="text-xs text-gray-500">
+                          {{ $appointment->created_at->diffForHumans() }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      {{ $appointment->subject }}
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+            @else
+            <p>Aucun rendez-vous ajouté récemment.</p>
+            @endif
+          </div>
+        </div>
+
+        <!-- Colonne des derniers rendez-vous modifiés -->
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+          <div class="p-6 bg-white border-b border-gray-200">
+            <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Derniers rendez-vous modifiés</h3>
+            @if($updatedAppointments->count())
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
+                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Sujet</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  @foreach($updatedAppointments as $appointment)
+                  <tr>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      <div class="flex flex-col">
+                        <span>
+                          {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
+                        </span>
+                        <span class="text-xs text-gray-500">
+                          {{ $appointment->updated_at->diffForHumans() }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+                      {{ $appointment->subject }}
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+            @else
+            <p>Aucun rendez-vous modifié récemment.</p>
+            @endif
+          </div>
+        </div>
+      </div>
+
 
       <!-- Bouton pour exécuter la commande d'importation -->
       <div class="p-6 mt-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
