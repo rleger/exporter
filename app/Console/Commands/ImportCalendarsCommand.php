@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\Entry;
 use App\Models\Calendar;
 use Sabre\VObject\Reader;
+use App\Models\Appointment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -124,7 +125,7 @@ class ImportCalendarsCommand extends Command
                 }
 
                 // Create or update the entry
-                Entry::updateOrCreate(
+                $entry = Entry::updateOrCreate(
                     [
                         'calendar_id' => $calendar->id,
                         'lastname'    => $lastname,
@@ -137,6 +138,33 @@ class ImportCalendarsCommand extends Command
                         'description' => $eventDescription,
                     ]
                 );
+
+                $this->info("Événement importé : {$firstname} {$lastname}");
+                Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);
+
+                // Extraire la date de début de l'événement
+
+                $dtstart = null;
+                if (isset($event->DTSTART)) {
+                    $dtstart = $event->DTSTART->getDateTime();
+                }
+
+                // Vérifier que la date est présente
+                if ($dtstart) {
+                    // Créer ou mettre à jour l'Appointment
+                    Appointment::updateOrCreate(
+                        [
+                            'entry_id' => $entry->id,
+                            'date'     => $dtstart,
+                        ],
+                        [
+                            'subject' => $entry->description,
+                        ]
+                    );
+                } else {
+                    $this->warn('Date de début manquante pour l\'événement : '.$summary);
+                    Log::warning('Date de début manquante.', ['summary' => $summary]);
+                }
 
                 $this->info("Événement importé : {$firstname} {$lastname}");
                 Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);

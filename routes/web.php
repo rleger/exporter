@@ -5,6 +5,7 @@ use App\Http\Controllers\EntryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AppointmentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/entries', [EntryController::class, 'index'])->name('entries.index');
 
     Route::post('/import-calendars', [DashboardController::class, 'importCalendars'])->name('import.calendars');
+
+    Route::get('/entries/{entry}/appointments', [AppointmentController::class, 'show'])->name('appointments.show');
 
     // Gérer les calendriers
     Route::resource('calendars', CalendarController::class)->except(['show', 'edit', 'update']);

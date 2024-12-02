@@ -95,6 +95,24 @@
                         </a>
                       </th>
 
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        <a href="{{ sortLink('appointments_count', 'Nb', $sort, $direction, $search) }}" class="flex items-center">
+                          Nb
+                          @if($sort === 'appointments_count')
+                          @if($direction === 'asc')
+                          <!-- Icône pour le tri ascendant -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                          </svg>
+                          @else
+                          <!-- Icône pour le tri descendant -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                          @endif
+                          @endif
+                        </a>
+                      </th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Contact
@@ -151,6 +169,12 @@
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                         {{ \Carbon\Carbon::parse($entry->birthdate)->format('d/m/Y') }}
                         ({{ \Carbon\Carbon::parse($entry->birthdate)->age }} ans)
+                      </td>
+
+                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                        <a href="{{ route('appointments.show', $entry->id) }}" class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 rounded-full bg-gray-50 ring-1 ring-inset ring-gray-500/10 hover:bg-gray-200">
+                          {{ $entry->appointments_count }}
+                        </a>
                       </td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">

@@ -17,7 +17,7 @@ class EntryController extends Controller
         $direction = $request->input('direction', 'asc');
 
         // Définir les colonnes autorisées pour le tri
-        $allowedSorts = ['name', 'lastname', 'created_at', 'updated_at', 'birthdate'];
+        $allowedSorts = ['name', 'lastname', 'created_at', 'updated_atj', 'birthdate', 'appointments_count'];
 
         // Valider les paramètres de tri
         if (!in_array($sort, $allowedSorts)) {
@@ -30,8 +30,9 @@ class EntryController extends Controller
 
         // Construire la requête de base avec les calendriers de l'utilisateur
         $query = Entry::whereIn('calendar_id', $user->calendars->pluck('id'))
-            ->with('calendar.user')
-            ->orderBy($sort, $direction);
+               ->with('calendar.user')
+               ->withCount('appointments')
+               ->orderBy('appointments_count' === $sort ? 'appointments_count' : $sort, $direction);
 
         // Appliquer le filtre de recherche si un terme est fourni
         if ($search) {
