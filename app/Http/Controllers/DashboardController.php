@@ -25,28 +25,37 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        // Récupérer les Calendars appartenant à l'utilisateur
+        $calendars = Calendar::with('user')
+            ->where('user_id', $user->id)
+            ->withCount('entries')
+            ->get();
+
+        // Récupérer les IDs des Calendars de l'utilisateur
+        $calendarIds = $calendars->pluck('id');
+
         // Récupérer les Calendars avec le nom de l'utilisateur et le nombre d'Entries
         $calendars = Calendar::with('user')
             ->withCount('entries')
             ->get();
 
-        // Récupérer les 20 derniers rendez-vous ajoutés pour l'utilisateur connecté
+        // Récupérer les 10 derniers rendez-vous ajoutés pour l'utilisateur connecté
         $recentAppointments = Appointment::with('entry')
-            ->whereHas('entry', function ($query) use ($user) {
-                $query->where('calendar_id', $user->calendars->pluck('id'));
+            ->whereHas('entry', function ($query) use ($calendarIds) {
+                $query->whereIn('calendar_id', $calendarIds);
             })
             ->orderBy('created_at', 'desc')
-            ->take(20)
+            ->take(10)
             ->get();
 
-        // Récupérer les 20 derniers rendez-vous modifiés pour l'utilisateur connecté
+        // Récupérer les 10 derniers rendez-vous modifiés pour l'utilisateur connecté
         $updatedAppointments = Appointment::with('entry')
-            ->whereHas('entry', function ($query) use ($user) {
-                $query->where('calendar_id', $user->calendars->pluck('id'));
+            ->whereHas('entry', function ($query) use ($calendarIds) {
+                $query->whereIn('calendar_id', $calendarIds);
             })
             ->whereColumn('created_at', '!=', 'updated_at')
             ->orderBy('updated_at', 'desc')
-            ->take(20)
+            ->take(10)
             ->get();
 
         return view('dashboard', compact('calendars', 'recentAppointments', 'updatedAppointments'));
