@@ -10,7 +10,7 @@
     <div class="mx-auto mb-10 max-w-7xl sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-800">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col items-center justify-between md:flex-row">
             <div class="font-semibold">{{ $entry->name }} {{ $entry->lastname }}</div>
             <div class="text-gray-700">{{ $entry->tel }}</div>
             <div class="text-gray-700">{{ $entry->email }}</div>
@@ -42,7 +42,6 @@
               <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                 Changements
               </th>
-
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
