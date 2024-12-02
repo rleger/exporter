@@ -10,6 +10,8 @@ class Appointment extends Model
         'entry_id',
         'subject',
         'date',
+        'created_at',
+        'updated_at',
     ];
 
     public function entry()

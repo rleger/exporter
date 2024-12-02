@@ -114,12 +114,14 @@ class ImportCalendarsCommand extends Command
                 }
 
                 // Vérifier que tous les champs nécessaires sont présents
-                if (empty($lastname) || empty($firstname)) {
+                if (empty($lastname) || empty($firstname) || empty($email) || empty($tel)) {
                     $this->warn('Événement incomplet : '.$summary);
                     Log::warning('Événement incomplet.', [
                         'summary'   => $summary,
                         'lastname'  => $lastname,
                         'firstname' => $firstname,
+                        'email'     => $email,
+                        'tel'       => $tel,
                     ]);
                     continue;
                 }
@@ -148,17 +150,37 @@ class ImportCalendarsCommand extends Command
                     $dtstart = $event->DTSTART->getDateTime();
                 }
 
+                // Extraire les champs CREATED et LAST-MODIFIED
+                $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
+
+                $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
+
+                $createdAt = isset($event->CREATED) ? $event->CREATED->getDateTime() : null;
+
+                $lastModified = isset($event->{'LAST-MODIFIED'}) ? $event->{'LAST-MODIFIED'}->getDateTime() : null;
+
                 // Vérifier que la date est présente
                 if ($dtstart) {
+                    // Préparer les données pour Appointment
+                    $appointmentData = [
+                        'subject' => $entry->description,
+                    ];
+
+                    if ($createdAt) {
+                        $appointmentData['created_at'] = $createdAt;
+                    }
+
+                    if ($lastModified) {
+                        $appointmentData['updated_at'] = $lastModified;
+                    }
+
                     // Créer ou mettre à jour l'Appointment
                     Appointment::updateOrCreate(
                         [
                             'entry_id' => $entry->id,
                             'date'     => $dtstart,
                         ],
-                        [
-                            'subject' => $entry->description,
-                        ]
+                        $appointmentData
                     );
                 } else {
                     $this->warn('Date de début manquante pour l\'événement : '.$summary);

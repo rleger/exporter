@@ -17,6 +17,10 @@
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
               Sujet
             </th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+              Changements
+            </th>
+
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -30,6 +34,17 @@
             <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
               {{ $appointment->subject }}
             </td>
+            <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+              <div class="flex flex-col">
+                <span class="text-xs text-gray-500">
+                  Crée : {{ $appointment->created_at->diffForHumans() }}
+                </span>
+                <span class="text-xs text-gray-500">
+                  Mis à jour : {{ $appointment->updated_at->diffForHumans() }}
+                </span>
+              </div>
+            </td>
+
           </tr>
           @endforeach
         </tbody>
