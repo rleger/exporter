@@ -35,18 +35,18 @@ class ImportCalendarsCommand extends Command
             }
 
             foreach ($vcalendar->VEVENT as $event) {
-                // Verify that SUMMARY and DESCRIPTION exist
+                // Vérifier que SUMMARY et DESCRIPTION existent
                 if (!isset($event->SUMMARY) || !isset($event->DESCRIPTION)) {
                     $this->warn('Événement sans SUMMARY ou DESCRIPTION. Ignoré.');
                     Log::warning('Événement sans SUMMARY ou DESCRIPTION.', ['event' => $event->serialize()]);
                     continue;
                 }
 
-                // Extract event data
+                // Extraire les données de l'événement
                 $summary = $event->SUMMARY->getValue();
                 $description = $event->DESCRIPTION->getValue();
 
-                // Process the SUMMARY field
+                // Remplacer les séquences '\n' par des sauts de ligne réels
                 $summary = str_replace('\\n', "\n", $summary);
 
                 $lastname = '';
@@ -54,24 +54,24 @@ class ImportCalendarsCommand extends Command
                 $birthdate = null;
                 $eventDescription = '';
 
-                // Adjusted regex
-                $regex = '/^(.+?) \((\d{2}\.\d{2}\.\d{4})\)\r?\n \[(.+?)\]/u';
+                // Expression régulière ajustée pour gérer les caractères spéciaux
+                $regex = '/^(.+?) \((\d{2}\.\d{2}\.\d{4})\)\n \[(.+?)\]/u';
 
                 if (preg_match($regex, $summary, $matches)) {
                     $fullName = trim($matches[1]);
 
-                    // Split and classify name parts
-                    $nameParts = preg_split('/\s+/', $fullName);
+                    // Séparer les parties du nom en utilisant mb_split pour UTF-8
+                    $nameParts = mb_split('\s+', $fullName);
 
                     $lastnameParts = [];
                     $firstnameParts = [];
 
                     foreach ($nameParts as $part) {
                         if (mb_strtoupper($part, 'UTF-8') === $part) {
-                            // Uppercase => Last name
+                            // Majuscules => Nom de famille
                             $lastnameParts[] = $part;
                         } else {
-                            // Not all uppercase => First name
+                            // Sinon => Prénom
                             $firstnameParts[] = $part;
                         }
                     }
@@ -79,10 +79,10 @@ class ImportCalendarsCommand extends Command
                     $lastname = implode(' ', $lastnameParts);
                     $firstname = implode(' ', $firstnameParts);
 
-                    // Ensure last name is fully uppercase
+                    // S'assurer que le nom de famille est entièrement en majuscules
                     $lastname = mb_strtoupper($lastname, 'UTF-8');
 
-                    // Handle birthdate
+                    // Gérer la date de naissance
                     try {
                         $birthdate = Carbon::createFromFormat('d.m.Y', $matches[2])->format('Y-m-d');
                     } catch (\Exception $e) {
@@ -93,38 +93,38 @@ class ImportCalendarsCommand extends Command
 
                     $eventDescription = $matches[3];
                 } else {
-                    // Log non-conforming summary
+                    // Log format non conforme
                     $this->warn('Format inattendu du résumé : '.$summary);
                     Log::warning('Format inattendu du résumé : '.$summary, ['raw_summary' => $summary]);
                     continue;
                 }
 
-                // Extract Telephone
-                $tel = '';
+                // Extraire Téléphone
                 if (preg_match('/Tel ?: ([^\n]+)/i', $description, $matches)) {
                     $tel = trim($matches[1]);
+                } else {
+                    $tel = '';
                 }
 
-                // Extract Email
-                $email = '';
+                // Extraire Email
                 if (preg_match('/Email ?: ([^\n]+)/i', $description, $matches)) {
                     $email = trim($matches[1]);
+                } else {
+                    $email = '';
                 }
 
-                // Check that all necessary fields are present
-                if (empty($lastname) || empty($firstname) || empty($email) || empty($tel)) {
+                // Vérifier que tous les champs nécessaires sont présents
+                if (empty($lastname) || empty($firstname)) {
                     $this->warn('Événement incomplet : '.$summary);
                     Log::warning('Événement incomplet.', [
                         'summary'   => $summary,
                         'lastname'  => $lastname,
                         'firstname' => $firstname,
-                        'email'     => $email,
-                        'tel'       => $tel,
                     ]);
                     continue;
                 }
 
-                // Create or update the entry
+                // Créer ou mettre à jour l'entrée
                 $entry = Entry::updateOrCreate(
                     [
                         'calendar_id' => $calendar->id,
@@ -143,7 +143,6 @@ class ImportCalendarsCommand extends Command
                 Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);
 
                 // Extraire la date de début de l'événement
-
                 $dtstart = null;
                 if (isset($event->DTSTART)) {
                     $dtstart = $event->DTSTART->getDateTime();
@@ -163,15 +162,13 @@ class ImportCalendarsCommand extends Command
                     );
                 } else {
                     $this->warn('Date de début manquante pour l\'événement : '.$summary);
-                    Log::warning('Date de début manquante.', ['summary' => $summary]);
+                    Log::warning('Date de début manquante pour l\'événement : '.$summary);
+                    continue;
                 }
-
-                $this->info("Événement importé : {$firstname} {$lastname}");
-                Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);
             }
-        }
 
-        $this->info('Importation terminée.');
-        Log::info('Importation des calendriers terminée.');
+            $this->info('Importation terminée.');
+            Log::info('Importation des calendriers terminée.');
+        }
     }
 }
