@@ -36,6 +36,7 @@ class DashboardController extends Controller
 
         // Récupérer les 20 derniers rendez-vous modifiés
         $updatedAppointments = Appointment::with('entry')
+            ->where('created_at', '!=', 'updated_at')
             ->orderBy('updated_at', 'desc')
             ->take(10)
             ->get();
