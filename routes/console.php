@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('calendars:import')->everyTwoHours();
+Schedule::command('calendars:import')->hourly();
