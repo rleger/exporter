@@ -19,13 +19,44 @@
           @endif
 
           <!-- Formulaire de Recherche -->
-          <form method="GET" action="{{ route('entries.index') }}" class="flex items-center mb-6 space-x-2">
-            <div class="flex-grow max-w-xl mt-2">
-              <input type="text" name="search" id="search" value="{{ request('search') }}" class="block w-full rounded-full bg-white px-4 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder="Rechercher par Nom, Prénom ou Email">
+          <form method="GET" action="{{ route('entries.index') }}">
+            <div class="flex items-center justify-between mb-6 space-x-2">
+
+              <div>
+                <div class="flex ">
+                  <div class="grid grid-cols-1 -mr-px w-80 grow focus-within:relative">
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" class="col-start-1 row-start-1 block w-full rounded-l-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6" placeholder="Rechercher par Nom, Prénom ou Email">
+
+                    <svg class="self-center col-start-1 row-start-1 ml-3 text-gray-400 pointer-events-none size-5 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path d="M8.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10.9 12.006c.11.542-.348.994-.9.994H2c-.553 0-1.01-.452-.902-.994a5.002 5.002 0 0 1 9.803 0ZM14.002 12h-1.59a2.556 2.556 0 0 0-.04-.29 6.476 6.476 0 0 0-1.167-2.603 3.002 3.002 0 0 1 3.633 1.911c.18.522-.283.982-.836.982ZM12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                    </svg>
+                  </div>
+
+
+                  @if(request('search') || request('all_entries'))
+                  <a href="{{ route('entries.index') }}" class="flex shrink-0 items-center gap-x-1.5  bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-900 outline outline-1 -outline-offset-1 outline-indigo-300 hover:bg-indigo-100 focus:relative focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+                    Reinitialiser
+                  </a>
+                  @endif
+                  <button type="submit" class="flex shrink-0 items-center gap-x-1.5 rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 hover:bg-gray-50 focus:relative focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-ml-0.5 size-4 text-gray-400">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                    Rechercher
+                  </button>
+                </div>
+              </div>
+
+
+
+              {{-- Checkbox --}}
+              <div class="flex items-center">
+                <input type="checkbox" name="all_entries" id="all_entries" {{ request()->has('all_entries') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 rounded">
+                <label for="all_entries" class="block ml-2 text-sm text-gray-900">
+                  Toutes les entrées
+                </label>
+              </div>
             </div>
-            @if(request('search'))
-            <a href="{{ route('entries.index') }}" class="px-4 py-1.5 bg-red-500 text-white rounded-full">Réinitialiser</a>
-            @endif
           </form>
 
           @if($entries->count())
