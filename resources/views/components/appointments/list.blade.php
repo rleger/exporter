@@ -33,8 +33,11 @@
                   </a>
                 </span>
                 <div class="flex items-center">
-                  <div class="w-2 h-2 mr-2 rounded-full bg-{{ $appointment->color_class }}-500"></div>
-                  <span class="text-{{ $appointment->color_class }}-800">{{ $appointment->subject }}</span>
+                  <div class="w-2 h-2 mr-2 rounded-full {{ $appointment->color_classes['bg'] }}"></div>
+
+                  <span class="{{ $appointment->color_classes['text'] }}">
+                    {{ $appointment->subject }}
+                  </span>
 
                 </div>
               </div>
