@@ -42,113 +42,14 @@
           <p>Aucun calendrier trouvé.</p>
           @endif
         </div>
-
       </div>
       <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
         <!-- Colonne des derniers rendez-vous ajoutés -->
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-white border-b border-gray-200">
-            <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Derniers rendez-vous ajoutés</h3>
-            @if($recentAppointments->count())
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  @foreach($recentAppointments as $appointment)
-                  <tr>
-                    <td class="px-6 py-4 text-sm whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
-                          {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
-                        </span>
-                        <span class="text-xs text-gray-500">
-                          {{ $appointment->created_at->diffForHumans() }}
-                        </span>
-                      </div>
-                    </td>
+        <x-appointments.list :appointments="$recentAppointments" title="Derniers rendez-vous ajoutés" :isUpdated="false" empty-message="Aucun rendez-vous ajouté récemment." />
 
-                    <td class="px-6 py-4 text-sm whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <span class="font-semibold">
-                          <a class="text-indigo-600 hover:text-indigo-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
-                            {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
-                          </a>
-                        </span>
-                        <div class="flex items-center">
-                          <div class="bg-{{ $appointment->color_class }}-500 w-2 h-2 rounded-full mr-2">
-                          </div>
-                          {{ $appointment->subject }}
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-            @else
-            <p>Aucun rendez-vous ajouté récemment.</p>
-            @endif
-          </div>
-        </div>
 
         <!-- Colonne des derniers rendez-vous modifiés -->
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-white border-b border-gray-200">
-            <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Derniers rendez-vous modifiés</h3>
-            @if($updatedAppointments->count())
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
-                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Entrée</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  @foreach($updatedAppointments as $appointment)
-                  <tr>
-                    <td class="px-6 py-4 text-sm whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <span class="{{ \Carbon\Carbon::parse($appointment->date)->isPast() ? 'text-gray-400' : 'text-gray-800' }}">
-                          {{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y H:i') }}
-                        </span>
-                        <span class="text-xs text-gray-500">
-                          {{ $appointment->updated_at->diffForHumans() }}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td class="px-6 py-4 text-sm whitespace-nowrap">
-                      <div class="flex flex-col">
-                        <span class="font-semibold">
-                          <a class="text-indigo-600 hover:text-indigo-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
-                            {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
-                          </a>
-                        </span>
-                        <div class="flex items-center">
-                          <div class="bg-{{ $appointment->color_class }}-500 w-2 h-2 rounded-full mr-2">
-                          </div>
-                          {{ $appointment->subject }}
-                        </div>
-                      </div>
-                    </td>
-
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-            @else
-            <p>Aucun rendez-vous modifié récemment.</p>
-            @endif
-          </div>
-        </div>
+        <x-appointments.list :appointments="$updatedAppointments" title="Derniers rendez-vous modifiés" :isUpdated="true" empty-message="Aucun rendez-vous modifié récemment." />
       </div>
 
 
