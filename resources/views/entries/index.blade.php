@@ -249,7 +249,9 @@
                         </div>
                       </td>
 
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->description }}</td>
+                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                        {{ $entry->description }}
+                      </td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                         {{ $entry->created_at->diffForHumans() }}
