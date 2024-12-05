@@ -28,7 +28,7 @@
             <td class="px-6 py-4 text-sm whitespace-nowrap">
               <div class="flex flex-col">
                 <span class="font-semibold">
-                  <a class="text-indigo-600 hover:text-indigo-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                  <a class="text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
                     {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                   </a>
                 </span>
