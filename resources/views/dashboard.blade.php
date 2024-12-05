@@ -79,9 +79,11 @@
                             {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                           </a>
                         </span>
-                        <span>
+                        <div class="flex items-center">
+                          <div class="bg-{{ $appointment->color_class }}-500 w-2 h-2 rounded-full mr-2">
+                          </div>
                           {{ $appointment->subject }}
-                        </span>
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -129,9 +131,11 @@
                             {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                           </a>
                         </span>
-                        <span>
+                        <div class="flex items-center">
+                          <div class="bg-{{ $appointment->color_class }}-500 w-2 h-2 rounded-full mr-2">
+                          </div>
                           {{ $appointment->subject }}
-                        </span>
+                        </div>
                       </div>
                     </td>
 
