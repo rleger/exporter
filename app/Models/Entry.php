@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasSubjectColors;
 use Illuminate\Database\Eloquent\Model;
 
 class Entry extends Model
 {
+    use HasSubjectColors;
+
     protected $fillable = [
         'calendar_id',
         'name',
@@ -13,7 +16,7 @@ class Entry extends Model
         'birthdate',
         'tel',
         'email',
-        'description',
+        'subject',
     ];
 
     public function calendar()
@@ -24,5 +27,10 @@ class Entry extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function getColorClassesAttribute()
+    {
+        return $this->getColorClasses('subject');
     }
 }

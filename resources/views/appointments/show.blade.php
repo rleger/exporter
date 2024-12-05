@@ -60,7 +60,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                <x-appointments.label :appointment="$appointment" />
+                <x-appointments.label :item="$appointment" />
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                 {{ $appointment->description }}

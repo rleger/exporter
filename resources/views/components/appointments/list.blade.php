@@ -32,7 +32,7 @@
                     {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
                   </a>
                 </span>
-                <x-appointments.label :appointment="$appointment" />
+                <x-appointments.label :item="$appointment" />
               </div>
             </td>
           </tr>

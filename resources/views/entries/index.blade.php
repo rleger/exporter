@@ -32,7 +32,6 @@
                     </svg>
                   </div>
 
-
                   @if(request('search') || request('all_entries'))
                   <a href="{{ route('entries.index') }}" class="flex shrink-0 items-center gap-x-1.5  bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-900 outline outline-1 -outline-offset-1 outline-indigo-300 hover:bg-indigo-100 focus:relative focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
                     Reinitialiser
@@ -46,8 +45,6 @@
                   </button>
                 </div>
               </div>
-
-
 
               {{-- Checkbox --}}
               <div class="flex items-center">
@@ -144,9 +141,6 @@
                         </a>
                       </th>
 
-                      {{-- <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Durée
-                      </th> --}}
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         <a href="{{ sortLink('total_duration', 'Durée', $sort, $direction, $search) }}" class="flex items-center">
                           Durée
@@ -172,7 +166,7 @@
                       </th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Description
+                        Subject
                       </th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -250,7 +244,7 @@
                       </td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {{ $entry->description }}
+                        <x-appointments.label :item="$entry" />
                       </td>
 
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
