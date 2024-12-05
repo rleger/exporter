@@ -16,9 +16,9 @@
                 <table class="min-w-full divide-y divide-gray-300">
                   <thead>
                     <tr>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nom du Calendrier</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Propriétaire</th>
-                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nombre d'Entrées</th>
+                      <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Nom du Calendrier</th>
+                      <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Propriétaire</th>
+                      <th scope="col" class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Nombre d'Entrées</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white">
