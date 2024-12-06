@@ -44,7 +44,7 @@ class EntryController extends Controller
         }
 
         // Paginer les résultats et conserver les paramètres de requête
-        $entries = $query->paginate(50)->appends($request->all());
+        $entries = $query->paginate(10)->appends($request->all());
 
         // Convertir total_duration_minutes en format HH:MM
         foreach ($entries as $entry) {

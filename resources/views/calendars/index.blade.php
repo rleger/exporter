@@ -10,7 +10,14 @@
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
           <div class="pb-5">
-            <a href="{{ route('calendars.create') }}" class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Ajouter un Calendrier</a>
+            <a href="{{ route('calendars.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-2.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+
+              <div class="flex items-center">
+                <x-heroicon-o-plus-circle class="mr-2 text-white size-6" />
+                Ajouter un Calendrier
+              </div>
+            </a>
+
           </div>
 
           @if(session('success'))
