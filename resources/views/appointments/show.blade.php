@@ -10,10 +10,23 @@
     <div class="mx-auto mb-10 max-w-7xl sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-800">
-          <div class="flex flex-col items-center justify-between md:flex-row">
-            <div class="font-semibold">{{ $entry->name }} {{ $entry->lastname }}</div>
-            <div class="text-gray-700">{{ $entry->tel }}</div>
-            <div class="text-gray-700">{{ $entry->email }}</div>
+          <div class="flex flex-col items-center justify-between space-y-2 md:space-y-0 md:flex-row">
+            <div class="font-semibold text-blue-700">
+              <div class="flex items-center text-gray-700">
+                <x-heroicon-s-user class="p-1 mr-2 text-blue-500 border border-blue-500 rounded-full size-6" />
+                {{ $entry->name }} {{ $entry->lastname }}
+              </div>
+            </div>
+
+            <div class="flex items-center text-gray-700">
+              <x-heroicon-s-phone class="p-1 mr-2 text-blue-500 border border-blue-500 rounded-full size-6" />
+              {{ $entry->tel }}
+            </div>
+
+            <div class="flex items-center text-gray-700">
+              <x-heroicon-s-envelope class="p-1 mr-2 text-blue-500 border border-blue-500 rounded-full size-6" />
+              {{ $entry->email }}
+            </div>
           </div>
         </div>
       </div>
@@ -23,8 +36,9 @@
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         @if($entry->appointments->count())
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 table-fixed">
           <thead>
+
             <tr>
               <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                 Date
@@ -62,7 +76,7 @@
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                 <x-appointments.label :item="$appointment" />
               </td>
-              <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
+              <td class="max-w-xs px-6 py-4 overflow-hidden text-sm text-gray-900 text-wrap whitespace-nowrap">
                 {{ $appointment->description }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
@@ -85,8 +99,6 @@
                   </span>
                 </div>
               </td>
-
-
             </tr>
             @endforeach
           </tbody>
