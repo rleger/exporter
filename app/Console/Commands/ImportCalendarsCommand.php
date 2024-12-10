@@ -53,7 +53,7 @@ class ImportCalendarsCommand extends Command
                 $lastname = '';
                 $firstname = '';
                 $birthdate = null;
-                $eventDescription = '';
+                $eventSubject = '';
 
                 // Expression régulière ajustée pour gérer les caractères spéciaux
                 $regex = '/^(.+?) \((\d{2}\.\d{2}\.\d{4})\)\n \[(.+?)\]/u';
@@ -92,7 +92,7 @@ class ImportCalendarsCommand extends Command
                         $birthdate = null;
                     }
 
-                    $eventDescription = $matches[3];
+                    $eventSubject = $matches[3];
                 } else {
                     // Log format non conforme
                     $this->warn('Format inattendu du résumé : '.$summary);
@@ -140,9 +140,9 @@ class ImportCalendarsCommand extends Command
                         'birthdate'   => $birthdate,
                     ],
                     [
-                        'tel'         => $tel,
-                        'email'       => $email,
-                        'description' => $eventDescription,
+                        'tel'     => $tel,
+                        'email'   => $email,
+                        'subject' => $eventSubject,
                     ]
                 );
 
@@ -161,7 +161,7 @@ class ImportCalendarsCommand extends Command
                 if ($dtstart) {
                     // Préparer les données pour Appointment
                     $appointmentData = [
-                        'subject'     => $entry->description,
+                        'subject'     => $entry->subject,
                         'description' => $remainingDescription,
                         'start_date'  => $dtstart,
                         'end_date'    => $dtend,
