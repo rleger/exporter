@@ -45,11 +45,12 @@
       </div>
       <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
         <!-- Colonne des derniers rendez-vous ajoutés -->
-        <x-appointments.list :appointments="$recentAppointments" title="Derniers rendez-vous ajoutés" :isUpdated="false" empty-message="Aucun rendez-vous ajouté récemment." />
+        <x-appointments.list :appointments="$recentAppointments" title="Nouveaux patients" :isUpdated="false" empty-message="Aucun rendez-vous récent." />
+
 
 
         <!-- Colonne des derniers rendez-vous modifiés -->
-        <x-appointments.list :appointments="$updatedAppointments" title="Derniers rendez-vous modifiés" :isUpdated="true" empty-message="Aucun rendez-vous modifié récemment." />
+        <x-appointments.list :appointments="$updatedAppointments" title="Patients existants" :isUpdated="true" empty-message="Aucun rendez-vous récent." />
       </div>
 
 
