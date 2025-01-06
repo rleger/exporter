@@ -5,9 +5,9 @@
     @if ($appointments->count())
     @foreach($appointments as $day)
     <!-- Day Header -->
-    <h4 class="my-4 text-lg font-semibold leading-6 text-center text-blue-700">
+    <h4 class="my-4 text-lg font-semibold leading-6 text-center text-sky-700">
       {{ $day['formatted_date'] }}
-      <span class="text-sm font-normal text-gray-500">
+      <span class="text-xs font-normal text-gray-500">
         ({{ $day['relative_date'] }})
       </span>
     </h4>
@@ -15,7 +15,7 @@
     <!-- Table of appointments for this day -->
     <table class="min-w-full mb-12 border border-gray-200 divide-y divide-gray-200 table-fixed">
       <thead>
-        <tr>
+        <tr class="bg-gray-50">
           <!-- 1) Heure -->
           <th class="w-20 px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
             Heure

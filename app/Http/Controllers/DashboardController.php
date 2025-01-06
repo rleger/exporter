@@ -117,16 +117,24 @@ class DashboardController extends Controller
     }
 
     /**
-     * Retrieve all future appointments (from today onward) for the given calendar IDs.
+     * Retrieve all future appointments (from "today onward") for the given calendar IDs,
+     * BUT if it's already 22:00 or later, skip "today" entirely and start from tomorrow.
      */
     protected function getAllFutureAppointments(Collection $userCalendarIds): Collection
     {
+        $now = Carbon::now();
+
+        // If local time is 22:00 or later, skip today; otherwise include from today's start.
+        $startDate = $now->hour >= 22
+            ? $now->copy()->addDay()->startOfDay()  // tomorrow 00:00
+            : $now->copy()->startOfDay();           // today 00:00
+
         return Appointment::with('entry')
             ->whereHas(
                 'entry',
                 fn ($q) => $q->whereIn('calendar_id', $userCalendarIds)
             )
-            ->where('date', '>=', Carbon::now()->startOfDay())
+            ->where('date', '>=', $startDate)
             ->orderBy('date', 'asc')
             ->get();
     }
