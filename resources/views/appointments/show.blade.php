@@ -74,7 +74,14 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                <x-appointments.label :item="$appointment" />
+                <div class="flex flex-col">
+                  <div>
+                    <x-appointments.label :item="$appointment" />
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    {{ $entry->calendar->name }}
+                  </div>
+                </div>
               </td>
               <td class="max-w-xs px-6 py-4 overflow-hidden text-sm text-gray-900 text-wrap whitespace-nowrap">
                 {{ $appointment->description }}
