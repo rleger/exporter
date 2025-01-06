@@ -23,6 +23,7 @@ class Appointment extends Model
     protected function casts(): array
     {
         return [
+            'date'       => 'datetime',
             'start_date' => 'datetime',
             'end_date'   => 'datetime',
         ];

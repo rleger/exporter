@@ -43,13 +43,15 @@
           @endif
         </div>
       </div>
-      <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
+      <div class="mt-6 mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
         <!-- Colonne des derniers rendez-vous ajoutés -->
         <x-appointments.list :appointments="$recentAppointments" title="Nouveaux patients" :isUpdated="false" empty-message="Aucun rendez-vous récent." />
 
         <!-- Colonne des derniers rendez-vous modifiés -->
         <x-appointments.list :appointments="$updatedAppointments" title="Patients existants" :isUpdated="true" empty-message="Aucun rendez-vous récent." />
       </div>
+
+        <x-appointments.upcoming-list :appointments="$groupedAppointments" title="Prochains rendez-vous" :isUpdated="true" empty-message="Aucun rendez-vous récent." />
 
       <!-- Bouton pour exécuter la commande d'importation -->
       <div class="p-6 mt-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">
