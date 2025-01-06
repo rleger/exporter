@@ -28,8 +28,13 @@
             <td class="px-3 py-4 text-sm whitespace-nowrap">
               <div class="flex flex-col">
                 <span class="font-semibold">
-                  <a class="text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
+                  <a class="flex justify-between text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
                     {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+
+                    {{-- If the user has more than one calendar, display the calendar name in a badge. --}}
+                    @if (auth()->user()->calendars->count() > 1)
+                    <x-calendar-label :calendar="$appointment->entry->calendar->name" :short="true" />
+                    @endif
                   </a>
                 </span>
                 <x-appointments.label :item="$appointment" />

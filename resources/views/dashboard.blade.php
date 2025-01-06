@@ -47,12 +47,9 @@
         <!-- Colonne des derniers rendez-vous ajoutés -->
         <x-appointments.list :appointments="$recentAppointments" title="Nouveaux patients" :isUpdated="false" empty-message="Aucun rendez-vous récent." />
 
-
-
         <!-- Colonne des derniers rendez-vous modifiés -->
         <x-appointments.list :appointments="$updatedAppointments" title="Patients existants" :isUpdated="true" empty-message="Aucun rendez-vous récent." />
       </div>
-
 
       <!-- Bouton pour exécuter la commande d'importation -->
       <div class="p-6 mt-6 overflow-hidden bg-white shadow-sm sm:rounded-lg">

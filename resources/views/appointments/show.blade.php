@@ -74,13 +74,15 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                <div class="flex flex-col">
-                  <div>
+                <div class="flex flex-col items-start">
+                  <span>
                     <x-appointments.label :item="$appointment" />
-                  </div>
-                  <div class="text-xs text-gray-500">
-                    {{ $entry->calendar->name }}
-                  </div>
+                  </span>
+
+                  {{-- If the user has more than one calendar, display the calendar name in a badge. --}}
+                  @if (auth()->user()->calendars->count() > 1)
+                  <x-calendar-label :calendar="$entry->calendar->name" />
+                  @endif
                 </div>
               </td>
               <td class="max-w-xs px-6 py-4 overflow-hidden text-sm text-gray-900 text-wrap whitespace-nowrap">
