@@ -41,7 +41,7 @@ class DashboardController extends Controller
         $allAppointments = $this->getAllFutureAppointments($userCalendarIds);
 
         // Keep a maximum of 50 appointments, but don't cut off mid-day
-        $selectedAppointments = $this->limitAppointmentsWithoutCuttingDay($allAppointments, 50);
+        $selectedAppointments = $this->limitAppointmentsWithoutCuttingDay($allAppointments, 90);
 
         // Mark newly created (< 2 days) appointments, then group and format by day
         $selectedAppointments = $this->markNewAppointments($selectedAppointments);
