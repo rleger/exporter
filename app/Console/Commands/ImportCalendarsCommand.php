@@ -34,6 +34,10 @@ class ImportCalendarsCommand extends Command
                 continue;
             }
 
+            // This array will hold appointment IDs grouped by date
+            // Example structure:  [ '2025-01-13' => [3, 7, 10], '2025-01-14' => [...], ... ]
+            $importedAppointmentsByDate = [];
+
             foreach ($vcalendar->VEVENT as $event) {
                 // Vérifier que SUMMARY et DESCRIPTION existent
                 if (!isset($event->SUMMARY) || !isset($event->DESCRIPTION)) {
@@ -176,18 +180,39 @@ class ImportCalendarsCommand extends Command
                     }
 
                     // Créer ou mettre à jour l'Appointment
-                    Appointment::updateOrCreate(
+                    $appointment = Appointment::updateOrCreate(
                         [
                             'entry_id' => $entry->id,
                             'date'     => $dtstart,
                         ],
                         $appointmentData
                     );
+                    // Convert the event's date to YYYY-MM-DD so we can group them
+                    $dateKey = $dtstart->format('Y-m-d');
+                    $importedAppointmentsByDate[$dateKey][] = $appointment->id;
                 } else {
                     $this->warn('Date de début manquante pour l\'événement : '.$summary);
                     Log::warning('Date de début manquante pour l\'événement : '.$summary);
                     continue;
                 }
+            }
+
+            /*
+             * ====================
+             *   CLEAN-UP STEP
+             * ====================.
+             *
+             *  For *each date* that appeared in the ICS feed, remove any existing
+             *  appointments (on that date + in this calendar) that are not in the new import list.
+             */
+            foreach ($importedAppointmentsByDate as $dateKey => $importedIds) {
+                Appointment::whereHas('entry', function ($query) use ($calendar) {
+                    // Only appointments for the same calendar
+                    $query->where('calendar_id', $calendar->id);
+                })
+                    ->whereDate('date', $dateKey)
+                    ->whereNotIn('id', $importedIds)
+                    ->delete();
             }
 
             $this->info('Importation terminée.');
