@@ -5,12 +5,17 @@
     @if ($appointments->count())
     @foreach($appointments as $day)
     <!-- Day Header -->
-    <h4 class="my-4 text-lg font-semibold leading-6 text-center text-sky-700">
-      {{ $day['formatted_date'] }}
-      <span class="text-xs font-normal text-gray-500">
-        ({{ $day['relative_date'] }})
-      </span>
-    </h4>
+    <div class="relative flex items-center justify-center">
+      <h4 class="my-4 text-lg font-semibold leading-6 text-sky-700">
+        {{ $day['formatted_date'] }}
+        <span class="text-xs font-normal text-gray-500">
+          ({{ $day['relative_date'] }})
+        </span>
+      </h4>
+      <div class="absolute right-0">
+        <x-day-occupancy :day="$day" />
+      </div>
+    </div>
 
     <!-- Table of appointments for this day -->
     <table class="min-w-full mb-12 border border-gray-200 divide-y divide-gray-200 table-fixed">
