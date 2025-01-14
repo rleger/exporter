@@ -1,7 +1,7 @@
 <!-- resources/views/components/appointments/list.blade.php -->
 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
   <div class="p-6 bg-white border-b border-gray-200">
-    <h3 class="mb-4 text-lg font-medium text-gray-900 leading-6">{{ $title }}</h3>
+    <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">{{ $title }}</h3>
     @if($appointments->count())
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
@@ -27,14 +27,15 @@
             <td class="px-3 py-4 text-sm whitespace-nowrap">
               <div class="flex flex-col">
                 <span class="font-semibold">
-                  <a class="flex justify-between text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
-                    {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
+                  <div class="flex justify-between">
+                    {{-- Entry name --}}
+                    <x-appointments.entry-name :item="$appointment" />
 
                     {{-- If the user has more than one calendar, display the calendar name in a badge. --}}
                     @if (auth()->user()->calendars->count() > 1)
                     <x-calendar-label :calendar="$appointment->entry->calendar->name" :short="true" />
                     @endif
-                  </a>
+                  </div>
                 </span>
                 <x-appointments.label :item="$appointment" />
               </div>

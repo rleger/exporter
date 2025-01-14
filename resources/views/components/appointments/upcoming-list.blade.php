@@ -63,11 +63,7 @@
           <!-- Entrée -->
           <td class="px-3 py-4 text-sm whitespace-nowrap">
             <div class="flex flex-col">
-              <span class="font-semibold">
-                <a class="flex justify-between text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $appointment->entry->id) }}">
-                  {{ $appointment->entry->name }} {{ $appointment->entry->lastname }}
-                </a>
-              </span>
+              <x-appointments.entry-name :item="$appointment" />
             </div>
           </td>
 
