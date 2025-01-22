@@ -12,11 +12,11 @@
   @if (Route::has('login'))
   @auth
   <a href="{{ url('/dashboard') }}" class="text-lg font-bold hover:underline">
-    Dashboard
+    Entrer
   </a>
   @else
   <a href="{{ route('login') }}" class="text-lg font-bold hover:underline">
-    Connection
+    Se connecter
   </a>
   @endauth
   @endif
