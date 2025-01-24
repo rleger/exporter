@@ -9,11 +9,11 @@
 
   <div class="py-12">
     <div class="mx-auto max-w-8xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
         <div class="p-6 text-gray-900">
 
           @if(session('importOutput'))
-          <div class="p-4 mb-4 text-green-800 bg-green-100 rounded">
+          <div class="p-4 mb-4 text-green-800 bg-green-100 rounded-sm">
             {{ session('importOutput') }}
           </div>
           @endif
@@ -48,7 +48,7 @@
 
               {{-- Checkbox --}}
               <div class="flex items-center">
-                <input type="checkbox" name="all_entries" id="all_entries" {{ request()->has('all_entries') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 rounded">
+                <input type="checkbox" name="all_entries" id="all_entries" {{ request()->has('all_entries') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300 rounded-sm">
                 <label for="all_entries" class="block ml-2 text-sm text-gray-900">
                   Toutes les entrées
                 </label>

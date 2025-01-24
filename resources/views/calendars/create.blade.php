@@ -7,7 +7,7 @@
 
   <div class="py-12">
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
         <div class="p-6 text-gray-900">
 
           <h1 class="pb-10 text-lg">Ajouter un Calendrier</h1>
@@ -31,7 +31,7 @@
             </div>
 
             <div class="pt-10">
-              <button type="submit" type="button" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Ajouter</button>
+              <button type="submit" type="button" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Ajouter</button>
             </div>
 
 

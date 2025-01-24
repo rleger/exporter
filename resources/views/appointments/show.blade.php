@@ -8,7 +8,7 @@
   <div class="py-12">
     {{-- Patient details --}}
     <div class="mx-auto mb-10 max-w-7xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
         <div class="p-6 text-gray-800">
           <div class="flex flex-col items-center justify-between space-y-2 md:space-y-0 md:flex-row">
             <div class="font-semibold text-blue-700">
@@ -34,7 +34,7 @@
 
     {{-- Appointment list --}}
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
         @if($entry->appointments->count())
         <table class="min-w-full divide-y divide-gray-200 table-fixed">
           <thead>

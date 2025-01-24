@@ -1,4 +1,4 @@
-<div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+<div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
   <div class="p-6 bg-white border-b border-gray-200">
     <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">{{ $title }}</h3>
 
