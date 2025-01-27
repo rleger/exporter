@@ -6,7 +6,7 @@
   <title>Welcome</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-black dark:text-white/50">
+<body class="flex flex-col items-center justify-center min-h-screen bg-gray-50 ">
   <img src="{{ asset('images/sheep.png') }}" alt="Sheep" class="w-auto mx-auto mb-6 h-80" />
 
   @if (Route::has('login'))
