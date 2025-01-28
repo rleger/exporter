@@ -7,10 +7,11 @@ $totalMinutes = 0;
 
 foreach ($day['appointments'] as $appointment) {
 if (
-!str_contains($appointment->subject, 'Annulé')
+!preg_match('/annul[eé]/i', $appointment->subject)
 && $appointment->start_date
 && $appointment->end_date
 ) {
+
 // Construire une signature unique pour ce créneau et cette personne
 $signature = $appointment->start_date->format('Y-m-d H:i') . '-' .
 $appointment->end_date->format('Y-m-d H:i') . '-' .
