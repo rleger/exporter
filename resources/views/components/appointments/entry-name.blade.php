@@ -1,4 +1,5 @@
- @if(str_contains($item->subject, 'Annulé'))
+ @if(preg_match('/annul[eé]/i', $item->subject))
+
  {{-- Appointment is canceelled --}}
  <a class="inline-block font-semibold line-through text-blue-800/70 hover:line-through hover:text-blue-700" href="{{ route('appointments.show', $item->entry->id) }}">
    {{ $item->entry->name }} {{ $item->entry->lastname }}
