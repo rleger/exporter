@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Entry;
 use App\Models\Calendar;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
@@ -47,11 +48,23 @@ class DashboardController extends Controller
         $selectedAppointments = $this->markNewAppointments($selectedAppointments);
         $groupedAppointments = $this->groupAndFormatAppointments($selectedAppointments);
 
+        // Retrieve the top 20 entries with the most cancellations
+        $topCancelledEntries = $this->getTopCancelledEntries(20);
+
         return view('dashboard', [
             'calendars'           => $calendars,
             'recentAppointments'  => $recentAppointments,
             'updatedAppointments' => $updatedAppointments,
             'groupedAppointments' => $groupedAppointments,
+            'topCancelledEntries' => $topCancelledEntries,
+        ]);
+
+        return view('dashboard', [
+            'calendars'           => $calendars,
+            'recentAppointments'  => $recentAppointments,
+            'updatedAppointments' => $updatedAppointments,
+            'groupedAppointments' => $groupedAppointments,
+            'topCancelledEntries' => $topCancelledEntries,
         ]);
     }
 
@@ -136,6 +149,30 @@ class DashboardController extends Controller
             )
             ->where('date', '>=', $startDate)
             ->orderBy('date', 'asc')
+            ->get();
+    }
+
+    /**
+     * Fetch the top n entries (default 20) with the most cancellations.
+     */
+    protected function getTopCancelledEntries(int $limit = 20)
+    {
+        return Entry::query()
+            ->whereHas('appointments', function ($query) {
+                $query->where('subject', 'like', '%annul%');
+            })
+            ->withCount([
+                'appointments as total_cancellations' => function ($query) {
+                    $query->where('subject', 'like', '%annul%');
+                },
+            ])
+            ->withMax([
+                'appointments as last_cancellation_date' => function ($query) {
+                    $query->where('subject', 'like', '%annul%');
+                },
+            ], 'updated_at')
+            ->orderByDesc('total_cancellations')
+            ->limit($limit)
             ->get();
     }
 
