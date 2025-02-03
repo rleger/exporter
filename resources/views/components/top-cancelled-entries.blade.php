@@ -1,7 +1,7 @@
 @if(isset($entries) && $entries->count())
 <div class="mt-6 overflow-hidden bg-white shadow-xs sm:rounded-lg">
   <div class="p-6 bg-white border-b border-gray-200">
-    <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Bêtes noires</h2>
+    <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">Moutons noirs</h2>
       <div class="overflow-x-auto">
 
         <table class="min-w-full divide-y divide-gray-200">
