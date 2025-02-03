@@ -31,8 +31,8 @@ class Appointment extends Model
 
     public function getDurationHoursAttribute()
     {
-        // Make sure both dates are set to avoid errors
         if ($this->start_date && $this->end_date) {
+            // Calculate the difference in minutes, then convert to hours.
             return $this->end_date->diffInMinutes($this->start_date) / 60;
         }
 

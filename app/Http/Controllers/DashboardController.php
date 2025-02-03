@@ -162,6 +162,11 @@ class DashboardController extends Controller
                     $query->where('subject', 'like', '%annul%');
                 },
             ])
+            ->withMax([
+                'appointments as last_cancellation_date' => function ($query) {
+                    $query->where('subject', 'like', '%annul%');
+                },
+            ], 'updated_at')
             ->orderByDesc('total_cancellations')
             ->limit($limit)
             ->get();
@@ -169,9 +174,10 @@ class DashboardController extends Controller
         // For each entry, compute the canceled hours and the hours not replaced.
         $entries->each(function ($entry) {
             // Get only the canceled appointments for this entry.
+
             $canceledAppointments = $entry->appointments->filter(function ($app) {
-                // You can use Str::contains or PHP's strpos
-                return Str::contains($app->subject, 'annul');
+                // Lowercase the subject and check for the substring 'annul'
+                return Str::contains(mb_strtolower($app->subject), 'annul');
             });
 
             // Sum up total canceled hours.
@@ -187,6 +193,7 @@ class DashboardController extends Controller
                 //  - They do NOT have 'annul' in their subject.
                 //  - They were created AFTER the cancellation (using $cancel->updated_at).
                 //  - Their time range overlaps with the canceled appointment.
+
                 $replacements = $entry->appointments->filter(function ($app) use ($cancel) {
                     return !Str::contains($app->subject, 'annul')
                         && $app->created_at->gt($cancel->updated_at)
