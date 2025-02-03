@@ -258,7 +258,10 @@
                       <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                         <div class="flex flex-col">
                           <span>{{ optional($entry->calendar->user)->name ?? 'Utilisateur inconnu' }}</span>
-                          <span>{{ optional($entry->calendar)->name ?? 'Calendrier inconnu' }}</span>
+                          @if (auth()->user()->calendars->count() > 1)
+                          <x-calendar-label :calendar="$entry->calendar->name" />
+                          @endif
+
                         </div>
                       </td>
                     </tr>
