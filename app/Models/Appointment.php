@@ -29,6 +29,16 @@ class Appointment extends Model
         ];
     }
 
+    public function getDurationHoursAttribute()
+    {
+        // Make sure both dates are set to avoid errors
+        if ($this->start_date && $this->end_date) {
+            return $this->end_date->diffInMinutes($this->start_date) / 60;
+        }
+
+        return 0;
+    }
+
     public function entry()
     {
         return $this->belongsTo(Entry::class);

@@ -10,6 +10,8 @@
             <tr class="bg-gray-50">
               <th class="px-3 py-2 text-sm font-medium text-left text-gray-900">Nom</th>
               <th class="px-3 py-2 text-sm font-medium text-left text-gray-900">Nombre d'annulations</th>
+              <th class="px-3 py-2 text-sm font-medium text-left text-gray-900">Temps</th>
+              <th class="px-3 py-2 text-sm font-medium text-left text-gray-900">Temps non remplacé</th>
               <th class="px-3 py-2 text-sm font-medium text-left text-gray-900">Dernière annulation</th>
             </tr>
           </thead>
@@ -22,6 +24,14 @@
               <td class="px-3 py-2 text-sm text-gray-700">
                 {{ $entry->total_cancellations }}
               </td>
+              <td class="px-3 py-2 text-sm text-gray-700">
+                {{ number_format($entry->total_cancellations, 2) }}
+
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-700">
+                {{ number_format($entry->canceled_hours_not_replaced, 2) }}
+              </td>
+
               <td class="px-3 py-2 text-sm text-gray-700">
                 {{ \Carbon\Carbon::parse($entry->last_cancellation_date)->diffForHumans() }}
               </td>
