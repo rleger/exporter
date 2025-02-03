@@ -9,7 +9,7 @@
     {{-- Patient details --}}
     <div class="mx-auto mb-10 max-w-7xl sm:px-6 lg:px-8">
       <h3 class="mt-10 text-base font-semibold text-gray-900">Informations</h3>
-      <div class="mt-5 overflow-hidden bg-white shadow-xs sm:rounded-lg">
+      <div class="mt-5 overflow-hidden bg-white shadow sm:rounded-lg">
 
         <div class="p-6 text-gray-800">
           <div class="flex flex-col items-center justify-between space-y-2 md:space-y-0 md:flex-row">
@@ -68,11 +68,10 @@
     {{-- Appointment list --}}
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
       <h3 class="mt-10 text-base font-semibold text-gray-900">Rendez-vous</h3>
-      <div class="mt-5 overflow-hidden bg-white shadow-xs sm:rounded-lg">
+      <div class="mt-5 overflow-hidden bg-white shadow sm:rounded-lg">
         @if($entry->appointments->count())
         <table class="min-w-full divide-y divide-gray-200 table-fixed">
           <thead>
-
             <tr>
               <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                 Date
