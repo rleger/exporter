@@ -19,7 +19,7 @@
             @foreach($entries as $entry)
             <tr class="even:bg-gray-50">
               <td class="px-3 py-2 text-sm text-gray-700">
-                {{ $entry->name }} {{ $entry->lastname }}
+                <x-appointments.entry-name :item="$entry" />
               </td>
               <td class="px-3 py-2 text-sm text-gray-700">
                 {{ $entry->total_cancellations }}

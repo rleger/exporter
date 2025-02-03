@@ -1,12 +1,22 @@
- @if(preg_match('/annul[eé]/i', $item->subject))
+@php
+// Déterminer si $item est un Appointment ou un Entry
+$isAppointment = $item instanceof \App\Models\Appointment;
 
- {{-- Appointment is canceelled --}}
- <a class="inline-block font-semibold line-through text-blue-800/70 hover:line-through hover:text-blue-700" href="{{ route('appointments.show', $item->entry->id) }}">
-   {{ $item->entry->name }} {{ $item->entry->lastname }}
- </a>
- @else
- {{-- Appointment is not canceelled --}}
- <a class="inline-block font-semibold text-blue-800 hover:text-blue-700 hover:underline" href="{{ route('appointments.show', $item->entry->id) }}">
-   {{ $item->entry->name }} {{ $item->entry->lastname }}
- </a>
- @endif
+$entryName = $isAppointment ? $item->entry->name : $item->name;
+$entryLastName = $isAppointment ? $item->entry->lastname : $item->lastname;
+$subject = $isAppointment ? $item->subject : null;
+$linkRoute = $isAppointment ? route('appointments.show', $item->entry->id) : route('appointments.show', $item->id);
+
+
+$isCancelled = $isAppointment && preg_match('/annul[eé]/i', $subject);
+@endphp
+
+@if($isCancelled)
+<a href="{{ $linkRoute }}" class="inline-block font-semibold line-through text-blue-800/70 hover:line-through hover:text-blue-700">
+  {{ $entryName }} {{ $entryLastName }}
+</a>
+@else
+<a href="{{ $linkRoute }}" class="inline-block font-semibold text-blue-800 hover:text-blue-700 hover:underline">
+  {{ $entryName }} {{ $entryLastName }}
+</a>
+@endif
