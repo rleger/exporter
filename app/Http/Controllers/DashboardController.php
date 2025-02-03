@@ -156,7 +156,7 @@ class DashboardController extends Controller
             ->whereHas('appointments', function ($query) {
                 $query->where('subject', 'like', '%annul%');
             })
-            ->with('appointments') // load ALL appointments for each entry
+            ->with('appointments')
             ->withCount([
                 'appointments as total_cancellations' => function ($query) {
                     $query->where('subject', 'like', '%annul%');
@@ -197,8 +197,8 @@ class DashboardController extends Controller
                 $replacements = $entry->appointments->filter(function ($app) use ($cancel) {
                     return !Str::contains($app->subject, 'annul')
                         && $app->created_at->gt($cancel->updated_at)
-                        && $app->start_date < $cancel->end_date
-                        && $app->end_date > $cancel->start_date;
+                        && $app->start_date <= $cancel->end_date
+                        && $app->end_date >= $cancel->start_date;
                 });
 
                 // Compute the total overlapping duration (in hours) from these replacements.

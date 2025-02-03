@@ -52,7 +52,9 @@
               <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                 Horaires
               </th>
-
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                Durée
+              </th>
               <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                 Changements
               </th>
@@ -78,7 +80,6 @@
                   <span>
                     <x-appointments.label :item="$appointment" />
                   </span>
-
                   {{-- If the user has more than one calendar, display the calendar name in a badge. --}}
                   @if (auth()->user()->calendars->count() > 1)
                   <x-calendar-label :calendar="$entry->calendar->name" />
@@ -98,6 +99,11 @@
                   </span>
                 </div>
               </td>
+              <td class="max-w-xs px-6 py-4 overflow-hidden text-xs text-gray-500 text-wrap whitespace-nowrap">
+
+                {{ $appointment->duration_hours }}h
+              </td>
+
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                 <div class="flex flex-col">
                   <span class="text-xs text-gray-500">

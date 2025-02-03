@@ -33,7 +33,7 @@ class Appointment extends Model
     {
         if ($this->start_date && $this->end_date) {
             // Calculate the difference in minutes, then convert to hours.
-            return $this->end_date->diffInMinutes($this->start_date) / 60;
+            return $this->start_date->diffInMinutes($this->end_date) / 60;
         }
 
         return 0;

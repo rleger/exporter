@@ -19,6 +19,7 @@ $iconFill = 'fill-gray-500';
 
 @if(!$short)
 <span class="inline-flex items-center gap-x-1.5 rounded-full {{ $badgeBg }} px-1.5 py-0.5 text-xs font-medium {{ $badgeText }}">
+
   <svg class="size-1.5 {{ $iconFill }}" viewBox="0 0 6 6" aria-hidden="true">
     <circle cx="3" cy="3" r="3" />
   </svg>
