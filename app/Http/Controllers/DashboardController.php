@@ -170,7 +170,7 @@ class DashboardController extends Controller
                 'appointments as last_cancellation_date' => function ($query) {
                     $query->where('subject', 'like', '%annul%');
                 },
-            ], 'updated_at')
+        ], 'updated_at')
             ->orderByDesc('total_cancellations')
             ->limit($limit)
             ->get();
@@ -186,6 +186,32 @@ class DashboardController extends Controller
             // Sum up total canceled hours.
             $entry->canceled_hours = $canceledAppointments->sum(function ($app) {
                 return $app->duration_hours;
+            });
+
+            // Sum up canceled hours that were not replaced.
+            $entry->canceled_hours_not_replaced = $canceledAppointments->sum(function ($cancelled) {
+                // Get the calendar id from the canceled appointment’s entry.
+                $calendarId = $cancelled->entry->calendar->id;
+
+                // Check for a replacement appointment in the same calendar.
+                // We consider a replacement valid if:
+                //   • It is not the canceled appointment itself.
+                //   • Its start_date is at or before the canceled appointment’s start_date.
+                //   • Its end_date is at or after the canceled appointment’s end_date.
+                //   • It was created after the cancellation (i.e. after the canceled appointment’s updated_at).
+                //   • It does NOT have 'annul' in its subject.
+                $replacementExists = Appointment::whereHas('entry', function ($query) use ($calendarId) {
+                    $query->where('calendar_id', $calendarId);
+                })
+                ->where('id', '<>', $cancelled->id)
+                ->where('start_date', '<=', $cancelled->start_date)
+                ->where('end_date', '>=', $cancelled->end_date)
+                ->where('created_at', '>', $cancelled->updated_at)
+                ->where('subject', 'not like', '%annul%')
+                ->exists();
+
+                // If a replacement exists, then no time is "lost" for this cancellation.
+                return $replacementExists ? 0 : $cancelled->duration_hours;
             });
         });
 

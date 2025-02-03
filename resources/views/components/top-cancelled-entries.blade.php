@@ -34,8 +34,8 @@
                 {{ number_format($entry->canceled_hours, 2) }} h
               </td>
               <td class="px-3 py-2 text-sm text-gray-700">
-                {{-- {{ number_format($entry->canceled_hours_not_replaced, 2) }} h --}}
-                ***
+                {{ number_format($entry->canceled_hours_not_replaced, 2) }} h
+                {{-- *** --}}
               </td>
               <td class="px-3 py-2 text-sm text-gray-700">
                 {{ \Carbon\Carbon::parse($entry->last_cancellation_date)->diffForHumans() }}
