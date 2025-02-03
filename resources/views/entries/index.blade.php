@@ -160,31 +160,19 @@
                           @endif
                         </a>
                       </th>
-
+                      {{--
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Contact
-                      </th>
+                      </th> --}}
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         Sujet
                       </th>
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        <a href="{{ sortLink('created_at', 'Date ajout', $sort, $direction, $search) }}" class="flex items-center">
-                          Date ajout
-                          @if($sort === 'created_at')
-                          @if($direction === 'asc')
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                          </svg>
-                          @else
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                          </svg>
-                          @endif
-                          @endif
-                        </a>
+                        Tps perdu
                       </th>
+
 
                       <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                         <a href="{{ sortLink('updated_at', 'Date maj', $sort, $direction, $search) }}" class="flex items-center">
@@ -215,6 +203,8 @@
                         <a class="text-gray-800 hover:text-gray-700 hover:underline" href="{{ route('appointments.show', $entry->id) }}">
                           {{ $entry->lastname }}
                         </a>
+
+
                       </td>
                       <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-3">
                         <a class="text-gray-800 hover:text-gray-700 hover:underline" href="{{ route('appointments.show', $entry->id) }}">
@@ -236,50 +226,59 @@
                         {{ $entry->total_duration }}
                       </td>
 
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                      {{-- <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                         <div class="flex flex-col">
                           <span>{{ $entry->tel }}</span>
-                          <span>{{ $entry->email }}</span>
-                        </div>
-                      </td>
-
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        <x-appointments.label :item="$entry" />
-                      </td>
-
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {{ $entry->created_at->diffForHumans() }}
-                      </td>
-
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {{ $entry->updated_at->diffForHumans() }}
-                      </td>
-
-                      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        <div class="flex flex-col">
-                          <span>{{ optional($entry->calendar->user)->name ?? 'Utilisateur inconnu' }}</span>
-                          @if (auth()->user()->calendars->count() > 1)
-                          <x-calendar-label :calendar="$entry->calendar->name" />
-                          @endif
-
-                        </div>
-                      </td>
-                    </tr>
-                    @endforeach
-                  </tbody>
-                </table>
+                      <span>{{ $entry->email }}</span>
               </div>
-              <div class="px-4 py-4 sm:px-6">
-                {{ $entries->links() }}
-              </div>
+              </td> --}}
+
+              <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                <x-appointments.label :item="$entry" />
+              </td>
+
+              <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                @php
+                $lostTime = $entry->canceled_hours_not_replaced;
+                $totalCancelled = $entry->canceled_hours;
+
+                if ($lostTime == 0) {
+                $colorClass = 'text-green-500';
+                } elseif ($lostTime < $totalCancelled) { $colorClass='text-orange-500' ; } else { $colorClass='text-red-500' ; } @endphp <span class="{{ $colorClass }}">
+                  {{ number_format($lostTime, 2) }} h
+                  </span>
+              </td>
+
+              <td class="flex flex-col px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                <span>{{ $entry->created_at->diffForHumans() }}</span>
+                <span>{{ $entry->updated_at->diffForHumans() }}</span>
+              </td>
+
+              <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                <div class="flex flex-col">
+                  <span>{{ optional($entry->calendar->user)->name ?? 'Utilisateur inconnu' }}</span>
+                  @if (auth()->user()->calendars->count() > 1)
+                  <x-calendar-label :calendar="$entry->calendar->name" />
+                  @endif
+
+                </div>
+              </td>
+              </tr>
+              @endforeach
+              </tbody>
+              </table>
+            </div>
+            <div class="px-4 py-4 sm:px-6">
+              {{ $entries->links() }}
             </div>
           </div>
-          @else
-          <p>Aucune entrée trouvée.</p>
-          @endif
-
         </div>
+        @else
+        <p>Aucune entrée trouvée.</p>
+        @endif
+
       </div>
     </div>
+  </div>
   </div>
 </x-app-layout>

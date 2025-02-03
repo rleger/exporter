@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\Models\Entry;
 use App\Models\Calendar;
 use App\Models\Appointment;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -170,50 +169,10 @@ class DashboardController extends Controller
                 'appointments as last_cancellation_date' => function ($query) {
                     $query->where('subject', 'like', '%annul%');
                 },
-        ], 'updated_at')
+            ], 'updated_at')
             ->orderByDesc('total_cancellations')
             ->limit($limit)
             ->get();
-
-        // For each entry, compute the canceled hours and the hours not replaced.
-        $entries->each(function ($entry) {
-            // Filter the entry's appointments to get only the canceled ones.
-            $canceledAppointments = $entry->appointments->filter(function ($app) {
-                // Use a case-insensitive check for 'annul'
-                return Str::contains(mb_strtolower($app->subject), 'annul');
-            });
-
-            // Sum up total canceled hours.
-            $entry->canceled_hours = $canceledAppointments->sum(function ($app) {
-                return $app->duration_hours;
-            });
-
-            // Sum up canceled hours that were not replaced.
-            $entry->canceled_hours_not_replaced = $canceledAppointments->sum(function ($cancelled) {
-                // Get the calendar id from the canceled appointment’s entry.
-                $calendarId = $cancelled->entry->calendar->id;
-
-                // Check for a replacement appointment in the same calendar.
-                // We consider a replacement valid if:
-                //   • It is not the canceled appointment itself.
-                //   • Its start_date is at or before the canceled appointment’s start_date.
-                //   • Its end_date is at or after the canceled appointment’s end_date.
-                //   • It was created after the cancellation (i.e. after the canceled appointment’s updated_at).
-                //   • It does NOT have 'annul' in its subject.
-                $replacementExists = Appointment::whereHas('entry', function ($query) use ($calendarId) {
-                    $query->where('calendar_id', $calendarId);
-                })
-                ->where('id', '<>', $cancelled->id)
-                ->where('start_date', '<=', $cancelled->start_date)
-                ->where('end_date', '>=', $cancelled->end_date)
-                ->where('created_at', '>', $cancelled->updated_at)
-                ->where('subject', 'not like', '%annul%')
-                ->exists();
-
-                // If a replacement exists, then no time is "lost" for this cancellation.
-                return $replacementExists ? 0 : $cancelled->duration_hours;
-            });
-        });
 
         return $entries;
     }

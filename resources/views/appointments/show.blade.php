@@ -5,10 +5,12 @@
     </h2>
   </x-slot>
 
-  <div class="py-12">
+  <div class="py-4">
     {{-- Patient details --}}
     <div class="mx-auto mb-10 max-w-7xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
+      <h3 class="mt-10 text-base font-semibold text-gray-900">Informations</h3>
+      <div class="mt-5 overflow-hidden bg-white shadow-xs sm:rounded-lg">
+
         <div class="p-6 text-gray-800">
           <div class="flex flex-col items-center justify-between space-y-2 md:space-y-0 md:flex-row">
             <div class="font-semibold text-blue-700">
@@ -30,11 +32,43 @@
           </div>
         </div>
       </div>
+
+      {{-- Stats --}}
+      <div>
+        <h3 class="mt-10 text-base font-semibold text-gray-900">Statistiques</h3>
+        <dl class="grid grid-cols-1 gap-5 mt-5 sm:grid-cols-3">
+          <div class="px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Temps de consultation</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{$entry->consultation_hours }} h</dd>
+          </div>
+          <div class="px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Temps annulé</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{$entry->canceled_hours }} h</dd>
+          </div>
+          <div class="px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Temps perdu</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              @php
+              $lostTime = $entry->canceled_hours_not_replaced;
+              $totalCancelled = $entry->canceled_hours;
+
+              if ($lostTime == 0) {
+              $colorClass = 'text-green-500';
+              } elseif ($lostTime < $totalCancelled) { $colorClass='text-orange-500' ; } else { $colorClass='text-red-500' ; } @endphp <span class="{{ $colorClass }}">
+                {{ number_format($lostTime, 2) }} h
+                </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
     </div>
+
 
     {{-- Appointment list --}}
     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
+      <h3 class="mt-10 text-base font-semibold text-gray-900">Rendez-vous</h3>
+      <div class="mt-5 overflow-hidden bg-white shadow-xs sm:rounded-lg">
         @if($entry->appointments->count())
         <table class="min-w-full divide-y divide-gray-200 table-fixed">
           <thead>
