@@ -146,13 +146,17 @@ class DashboardController extends Controller
     }
 
     /**
-     * Fetch the top n entries (default 20) with the most cancellations.
+     * Fetch the top n entries (default 20) with the most cancellations,
+     * limited to the current user's calendars.
      */
     protected function getTopCancelledEntries(int $limit = 20)
     {
-        // Retrieve entries that have at least one canceled appointment.
-        // We load all appointments for each entry so we can check for replacements.
+        // Get the current user's calendar IDs.
+        $userCalendarIds = $this->getUserCalendarIds()->toArray();
+
+        // Retrieve entries belonging to the user's calendars that have at least one canceled appointment.
         $entries = Entry::query()
+            ->whereIn('calendar_id', $userCalendarIds)
             ->whereHas('appointments', function ($query) {
                 $query->where('subject', 'like', '%annul%');
             })
@@ -173,10 +177,9 @@ class DashboardController extends Controller
 
         // For each entry, compute the canceled hours and the hours not replaced.
         $entries->each(function ($entry) {
-            // Get only the canceled appointments for this entry.
-
+            // Filter the entry's appointments to get only the canceled ones.
             $canceledAppointments = $entry->appointments->filter(function ($app) {
-                // Lowercase the subject and check for the substring 'annul'
+                // Use a case-insensitive check for 'annul'
                 return Str::contains(mb_strtolower($app->subject), 'annul');
             });
 
@@ -184,103 +187,9 @@ class DashboardController extends Controller
             $entry->canceled_hours = $canceledAppointments->sum(function ($app) {
                 return $app->duration_hours;
             });
-
-            $canceledNotReplaced = 0;
-
-            // Process each canceled appointment individually.
-            foreach ($canceledAppointments as $cancel) {
-                // Find potential replacement appointments:
-                //  - They do NOT have 'annul' in their subject.
-                //  - They were created AFTER the cancellation (using $cancel->updated_at).
-                //  - Their time range overlaps with the canceled appointment.
-
-                $replacements = $entry->appointments->filter(function ($app) use ($cancel) {
-                    return !Str::contains($app->subject, 'annul')
-                        && $app->created_at->gt($cancel->updated_at)
-                        && $app->start_date <= $cancel->end_date
-                        && $app->end_date >= $cancel->start_date;
-                });
-
-                // Compute the total overlapping duration (in hours) from these replacements.
-                $overlapHours = $this->computeUnionOverlap(
-                    $cancel->start_date,
-                    $cancel->end_date,
-                    $replacements
-                );
-
-                // For this canceled appointment, the not-replaced portion is the original duration minus any overlap.
-                $notReplaced = $cancel->duration_hours - $overlapHours;
-                if ($notReplaced < 0) {
-                    $notReplaced = 0;
-                }
-                $canceledNotReplaced += $notReplaced;
-            }
-
-            $entry->canceled_hours_not_replaced = $canceledNotReplaced;
         });
 
         return $entries;
-    }
-
-    /**
-     * Given a canceled appointment's start and end times and a collection
-     * of replacement appointments, compute the total (union) overlapping duration in hours.
-     *
-     * @param Carbon     $cancelStart
-     * @param Carbon     $cancelEnd
-     * @param Collection $replacements
-     *
-     * @return float
-     */
-    private function computeUnionOverlap($cancelStart, $cancelEnd, $replacements)
-    {
-        $intervals = [];
-
-        // For each replacement appointment, compute its overlap with the canceled interval.
-        foreach ($replacements as $r) {
-            // Determine the overlap start and end.
-            $overlapStart = $cancelStart->gt($r->start_date) ? $cancelStart : $r->start_date;
-            $overlapEnd = $cancelEnd->lt($r->end_date) ? $cancelEnd : $r->end_date;
-
-            // Only consider if there is an actual overlap.
-            if ($overlapStart->lt($overlapEnd)) {
-                $intervals[] = [$overlapStart, $overlapEnd];
-            }
-        }
-
-        // Sort intervals by their start time.
-        usort($intervals, function ($a, $b) {
-            return $a[0]->timestamp - $b[0]->timestamp;
-        });
-
-        // Merge overlapping intervals to avoid double-counting.
-        $merged = [];
-        foreach ($intervals as $interval) {
-            if (empty($merged)) {
-                $merged[] = $interval;
-            } else {
-                // Get the last merged interval.
-                $last = $merged[count($merged) - 1];
-                // If the current interval starts before (or exactly when) the last ends, merge them.
-                if ($interval[0]->timestamp <= $last[1]->timestamp) {
-                    // Extend the last interval's end if needed.
-                    $merged[count($merged) - 1][1] = $interval[1]->timestamp > $last[1]->timestamp
-                        ? $interval[1]
-                        : $last[1];
-                } else {
-                    $merged[] = $interval;
-                }
-            }
-        }
-
-        // Sum up the total duration (in minutes) of the merged intervals.
-        $totalMinutes = 0;
-        foreach ($merged as $interval) {
-            $totalMinutes += $interval[1]->diffInMinutes($interval[0]);
-        }
-
-        // Return the duration in hours.
-        return $totalMinutes / 60;
     }
 
     /**
