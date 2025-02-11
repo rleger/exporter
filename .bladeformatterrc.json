@@ -1,0 +1,17 @@
+{
+    "indentSize": 4,
+    "wrapAttributes": "auto",
+    "wrapAttributesMinAttrs": 4,
+    "wrapLineLength": 160,
+    "endWithNewLine": true,
+    "noMultipleEmptyLines": true,
+    "useTabs": false,
+    "sortTailwindcssClasses": true,
+    "sortHtmlAttributes": "none",
+    "noPhpSyntaxCheck": false,
+    "noSingleQuote": false,
+    "indentInnerHtml": true,
+    "noTrailingCommaPhp": false,
+    "extraLiners": [],
+    "componentPrefix": ["x-", "livewire:"]
+}
