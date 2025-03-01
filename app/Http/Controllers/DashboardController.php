@@ -34,7 +34,6 @@ class DashboardController extends Controller
     public function index()
     {
         $userCalendarIds = $this->getUserCalendarIds();
-        $calendars = $this->getAllCalendars();
         $recentAppointments = $this->getRecentAppointments($userCalendarIds);
         $updatedAppointments = $this->getUpdatedAppointments($userCalendarIds);
 
@@ -52,7 +51,6 @@ class DashboardController extends Controller
         $topCancelledEntries = $this->getTopCancelledEntries(20);
 
         return view('dashboard', [
-            'calendars'           => $calendars,
             'recentAppointments'  => $recentAppointments,
             'updatedAppointments' => $updatedAppointments,
             'groupedAppointments' => $groupedAppointments,
@@ -69,16 +67,6 @@ class DashboardController extends Controller
 
         return Calendar::where('user_id', $user->id)
             ->pluck('id');
-    }
-
-    /**
-     * Optionally fetch ALL calendars (with entry counts) for display in the view.
-     */
-    protected function getAllCalendars()
-    {
-        return Calendar::with('user')
-            ->withCount('entries')
-            ->get();
     }
 
     /**

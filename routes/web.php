@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
+use App\Http\Controllers\RecapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
@@ -19,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Afficher les entrées de l'utilisateur
     Route::get('/entries', [EntryController::class, 'index'])->name('entries.index');
+
+    Route::get('/recap', [RecapController::class, 'index'])->name('recap.index');
 
     Route::post('/import-calendars', [DashboardController::class, 'importCalendars'])->name('import.calendars');
 

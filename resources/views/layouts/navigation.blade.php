@@ -23,6 +23,10 @@
                     <x-nav-link :href="route('calendars.index')" :active="request()->routeis('calendars.index')">
                         {{ __('Calendrier') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('recap.index')" :active="request()->routeis('recap.index')">
+                        {{ __('Recap') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -93,6 +97,9 @@
                 {{ __('Calendrier') }}
             </x-responsive-nav-link>
 
+            <x-responsive-nav-link :href="route('recap.index')" :active="request()->routeis('recap.index')">
+                {{ __('Recap') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
