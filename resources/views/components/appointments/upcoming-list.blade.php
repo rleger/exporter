@@ -1,54 +1,54 @@
-<div class="shadow-xs overflow-hidden bg-white sm:rounded-lg">
-    <div class="border-b border-gray-200 bg-white p-6">
+<div class="overflow-hidden bg-white shadow-xs sm:rounded-lg">
+    <div class="p-6 bg-white border-b border-gray-200">
         <h3 class="mb-4 text-lg font-medium leading-6 text-gray-900">{{ $title }}</h3>
 
         @if ($appointments->count())
             @foreach ($appointments as $day)
                 <!-- Day Header -->
-                <div class="relative flex items-center justify-center">
-                    <h4 class="my-4 text-lg font-semibold leading-6 text-sky-700">
+                <div class="relative flex flex-col items-center justify-center mb-5">
+                    <h4 class="text-lg font-semibold leading-6 text-sky-700">
                         {{ $day['formatted_date'] }}
-                        <span class="text-xs font-normal text-gray-500">
-                            ({{ $day['relative_date'] }})
-                        </span>
                     </h4>
+                    <span class="text-xs font-normal text-gray-500">
+                        ({{ $day['relative_date'] }})
+                    </span>
                     <div class="absolute right-0">
                         <x-day-occupancy :day="$day" />
                     </div>
                 </div>
 
                 <!-- Table of appointments for this day -->
-                <table class="mb-12 min-w-full table-fixed divide-y divide-gray-200 border border-gray-200">
+                <table class="min-w-full mb-12 border border-gray-200 divide-y divide-gray-200 table-fixed">
                     <thead>
                         <tr class="bg-gray-50">
                             <!-- 1) Heure -->
-                            <th class="w-20 px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            <th class="w-20 px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                 Heure
                             </th>
 
                             <!-- 2) Entrée -->
-                            <th class="w-72 px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase w-72">
                                 Patient
                             </th>
 
                             <!-- 3) Rendez-vous -->
-                            <th class="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                 Rendez-vous
                             </th>
 
                             <!-- 4) Calendrier (EXTREME RIGHT, only if multiple calendars) -->
                             @if (auth()->user()->calendars->count() > 1)
-                                <th class="w-32 px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                <th class="w-32 px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                 </th>
                             @endif
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($day['appointments'] as $appointment)
                             <tr>
                                 <!-- Heure -->
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                <td class="px-3 py-4 text-sm whitespace-nowrap">
 
                                     <span class="inline-flex items-center gap-x-1.5 rounded-md py-0.5 text-gray-800">
                                         {{ $appointment->date->format('H:i') }}
@@ -61,20 +61,20 @@
                                 </td>
 
                                 <!-- Entrée -->
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                <td class="px-3 py-4 text-sm whitespace-nowrap">
                                     <div class="flex flex-col">
                                         <x-appointments.entry-name :item="$appointment" />
                                     </div>
                                 </td>
 
                                 <!-- Rendez-vous -->
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                <td class="px-3 py-4 text-sm whitespace-nowrap">
                                     <x-appointments.label :item="$appointment" />
                                 </td>
 
                                 <!-- Calendrier (only if multiple calendars) -->
                                 @if (auth()->user()->calendars->count() > 1)
-                                    <td class="whitespace-nowrap px-3 py-4 text-right text-sm">
+                                    <td class="px-3 py-4 text-sm text-right whitespace-nowrap">
                                         <x-calendar-label :calendar="$appointment->entry->calendar->name" :short="true" />
                                     </td>
                                 @endif
