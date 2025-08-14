@@ -12,10 +12,10 @@
 
 @if ($isCancelled)
     <a href="{{ $linkRoute }}" class="inline-block font-semibold text-blue-800/70 line-through hover:text-blue-700 hover:line-through">
-        {{ $entryName }} {{ $entryLastName }}
+        {{ $entryLastName }} {{ $entryName }}
     </a>
 @else
     <a href="{{ $linkRoute }}" class="inline-block font-semibold text-blue-800 hover:text-blue-700 hover:underline">
-        {{ $entryName }} {{ $entryLastName }}
+        {{ $entryLastName }} {{ $entryName }}
     </a>
 @endif
