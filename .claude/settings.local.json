@@ -1,0 +1,12 @@
+{
+  "enabledMcpjsonServers": [
+    "laravel-boost",
+    "herd"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nReplace Laravel Pint with PHP CS Fixer in project guidelines\n\nUpdated CLAUDE.md to reference php-cs-fixer instead of pint for code formatting. Also updated composer dependencies to include Laravel Boost and remove Laravel Pint.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ]
+  }
+}
