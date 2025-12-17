@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Laragear\WebAuthn\Assertion\Validator\AssertionValidation;
 use Laragear\WebAuthn\ByteBuffer;
-use Laragear\WebAuthn\Challenge;
+use Laragear\WebAuthn\Challenge\Challenge;
 use Laragear\WebAuthn\Models\WebAuthnCredential;
 
 class TwoFactorChallengeController extends Controller
@@ -124,8 +124,8 @@ class TwoFactorChallengeController extends Controller
             return response()->json(['error' => 'No passkeys registered'], 400);
         }
 
-        // Generate challenge
-        $challenge = Challenge::random();
+        // Generate challenge (32 bytes, 60 second timeout)
+        $challenge = Challenge::random(32, 60);
         session(['two_factor:webauthn_challenge' => $challenge->data->toBase64Url()]);
 
         $options = [
