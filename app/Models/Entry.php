@@ -48,7 +48,9 @@ class Entry extends Model implements CipherSweetEncrypted
      */
     public function getFormattedNameAttribute(): string
     {
-        return $this->attributes['name'] ? mb_convert_case($this->attributes['name'], MB_CASE_TITLE, 'UTF-8') : '';
+        $name = $this->getAttributeValue('name');
+
+        return $name ? mb_convert_case($name, MB_CASE_TITLE, 'UTF-8') : '';
     }
 
     /**
@@ -56,7 +58,9 @@ class Entry extends Model implements CipherSweetEncrypted
      */
     public function getFormattedLastnameAttribute(): string
     {
-        return $this->attributes['lastname'] ? mb_strtoupper($this->attributes['lastname']) : '';
+        $lastname = $this->getAttributeValue('lastname');
+
+        return $lastname ? mb_strtoupper($lastname) : '';
     }
 
     public static function configureCipherSweet(EncryptedRow $encryptedRow): void
