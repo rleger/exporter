@@ -2,8 +2,8 @@
     // Déterminer si $item est un Appointment ou un Entry
     $isAppointment = $item instanceof \App\Models\Appointment;
 
-    $entryName = $isAppointment ? $item->entry->name : $item->name;
-    $entryLastName = $isAppointment ? $item->entry->lastname : $item->lastname;
+    $entryName = $isAppointment ? $item->entry->formatted_name : $item->formatted_name;
+    $entryLastName = $isAppointment ? $item->entry->formatted_lastname : $item->formatted_lastname;
     $subject = $isAppointment ? $item->subject : null;
     $linkRoute = $isAppointment ? route('appointments.show', $item->entry->id) : route('appointments.show', $item->id);
 

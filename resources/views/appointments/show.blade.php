@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Rendez-vous pour {{ $entry->name }} {{ $entry->lastname }}
+            Rendez-vous pour {{ $entry->formatted_lastname }} {{ $entry->formatted_name }}
         </h2>
     </x-slot>
 
@@ -16,7 +16,7 @@
                         <div class="font-semibold text-blue-700">
                             <div class="flex items-center text-gray-700">
                                 <x-heroicon-s-user class="mr-2 size-6 rounded-full border border-blue-500 p-1 text-blue-500" />
-                                {{ $entry->name }} {{ $entry->lastname }}
+                                {{ $entry->formatted_lastname }} {{ $entry->formatted_name }}
                             </div>
                         </div>
 
