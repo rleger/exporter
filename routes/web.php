@@ -7,19 +7,26 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AppointmentController;
+use Laragear\WebAuthn\Http\Routes as WebAuthnRoutes;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// WebAuthn routes for passkey registration and authentication
+Route::middleware(['auth'])->group(function () {
+    WebAuthnRoutes::register();
 });
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', '2fa.enabled'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Afficher les entrées de l'utilisateur
     Route::get('/entries', [EntryController::class, 'index'])->name('entries.index');
+    Route::get('/entries/export', [EntryController::class, 'export'])->name('entries.export');
 
     Route::get('/recap', [RecapController::class, 'index'])->name('recap.index');
 

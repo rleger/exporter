@@ -8,7 +8,7 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-test('users can authenticate using the login screen', function () {
+test('users without 2FA are redirected to setup after login', function () {
     $user = User::factory()->create();
 
     $response = $this->post('/login', [
@@ -17,7 +17,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('two-factor.setup', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {

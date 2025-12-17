@@ -27,7 +27,7 @@
                                     <div class="-mr-px grid w-80 grow grid-cols-1 focus-within:relative">
                                         <input type="text" name="search" id="search" value="{{ request('search') }}"
                                             class="col-start-1 row-start-1 block w-full rounded-l-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:pl-9 sm:text-sm/6"
-                                            placeholder="Rechercher par Nom, Prénom ou Email">
+                                            placeholder="Recherche exacte par Nom, Prénom, Email ou Tel">
 
                                         <svg class="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400 sm:size-4"
                                             viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -62,6 +62,15 @@
                                     Toutes les entrées
                                 </label>
                             </div>
+
+                            {{-- Export Button --}}
+                            <a href="{{ route('entries.export', request()->query()) }}"
+                                class="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-ml-0.5 size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                                Exporter Excel
+                            </a>
                         </div>
                     </form>
 
@@ -85,63 +94,17 @@
                                                     }
                                                 @endphp
 
+                                                <!-- Note: Name columns are not sortable due to encryption -->
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                    <a href="{{ sortLink('lastname', 'Prénom', $sort, $direction, $search) }}" class="flex items-center">
-                                                        Nom
-                                                        @if ($sort === 'lastname')
-                                                            @if ($direction === 'asc')
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                                                                </svg>
-                                                            @else
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                                                </svg>
-                                                            @endif
-                                                        @endif
-                                                    </a>
+                                                    Nom
                                                 </th>
 
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                    <a href="{{ sortLink('name', 'Nom', $sort, $direction, $search) }}" class="flex items-center">
-                                                        Prénom
-                                                        @if ($sort === 'name')
-                                                            @if ($direction === 'asc')
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                                                                </svg>
-                                                            @else
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                                                </svg>
-                                                            @endif
-                                                        @endif
-                                                    </a>
+                                                    Prénom
                                                 </th>
 
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                    <a href="{{ sortLink('birthdate', 'Date de Naissance', $sort, $direction, $search) }}"
-                                                        class="flex items-center">
-                                                        Date de Naissance
-                                                        @if ($sort === 'birthdate')
-                                                            @if ($direction === 'asc')
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                                                                </svg>
-                                                            @else
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none"
-                                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M19 9l-7 7-7-7" />
-                                                                </svg>
-                                                            @endif
-                                                        @endif
-                                                    </a>
+                                                    Date de Naissance
                                                 </th>
 
                                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">

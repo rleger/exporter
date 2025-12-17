@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EntriesExport;
 use App\Models\Entry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EntryController extends Controller
 {
@@ -14,39 +16,39 @@ class EntryController extends Controller
         $search = $request->input('search');
         $allEntries = $request->has('all_entries');
 
-        // Récupérer les paramètres de tri avec des valeurs par défaut
-        $sort = $request->input('sort', 'lastname');
-        $direction = $request->input('direction', 'asc');
+        // Sorting parameters with defaults (removed name/lastname/birthdate due to encryption)
+        $sort = $request->input('sort', 'created_at');
+        $direction = $request->input('direction', 'desc');
 
-        // Définir les colonnes autorisées pour le tri
-        $allowedSorts = ['name', 'lastname', 'created_at', 'updated_at', 'birthdate', 'appointments_count', 'total_duration'];
+        // Allowed sort columns (encrypted fields removed)
+        $allowedSorts = ['created_at', 'updated_at', 'appointments_count', 'total_duration'];
 
-        // Valider les paramètres de tri
+        // Validate sort parameters
         if (!in_array($sort, $allowedSorts)) {
-            $sort = 'lastname';
+            $sort = 'created_at';
         }
 
         if (!in_array(strtolower($direction), ['asc', 'desc'])) {
-            $direction = 'asc';
+            $direction = 'desc';
         }
 
-        // Construire la requête de base
+        // Build base query
         $query = $this->buildQuery($user, $allEntries, $sort, $direction);
 
-        // Appliquer le filtre de recherche si un terme est fourni
+        // Apply search filter using blind indexes (exact match only)
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('lastname', 'like', "%{$search}%")
-                  ->orWhere('tel', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $q->whereBlind('name', 'name_index', $search)
+                  ->orWhereBlind('lastname', 'lastname_index', $search)
+                  ->orWhereBlind('tel', 'tel_index', $search)
+                  ->orWhereBlind('email', 'email_index', $search);
             });
         }
 
-        // Paginer les résultats et conserver les paramètres de requête
+        // Paginate results and preserve query parameters
         $entries = $query->paginate(10)->appends($request->all());
 
-        // Convertir total_duration_minutes en format HH:MM
+        // Convert total_duration_minutes to HH:MM format
         foreach ($entries as $entry) {
             $totalMinutes = max(0, $entry->total_duration_minutes ?? 0);
 
@@ -60,7 +62,7 @@ class EntryController extends Controller
     }
 
     /**
-     * Construire la requête pour récupérer les entrées.
+     * Build the query to retrieve entries.
      *
      * @param \Illuminate\Contracts\Auth\Authenticatable $user
      * @param bool                                       $allEntries
@@ -73,13 +75,12 @@ class EntryController extends Controller
     {
         $entryQuery = Entry::query()
             ->with('calendar.user', 'appointments')
-            ->leftJoin('appointments', 'entries.id', '=', 'appointments.entry_id')
-            ->select(
-                'entries.*',
-                DB::raw('COUNT(appointments.id) as appointments_count'),
-                DB::raw('SUM(TIMESTAMPDIFF(MINUTE, appointments.start_date, appointments.end_date)) as total_duration_minutes')
-            )
-            ->groupBy('entries.id');
+            ->withCount('appointments')
+            ->addSelect([
+                'total_duration_minutes' => DB::table('appointments')
+                    ->selectRaw('COALESCE(SUM(TIMESTAMPDIFF(MINUTE, start_date, end_date)), 0)')
+                    ->whereColumn('appointments.entry_id', 'entries.id'),
+            ]);
 
         if (!$allEntries) {
             $entryQuery->whereIn('calendar_id', $user->calendars->pluck('id'));
@@ -96,5 +97,46 @@ class EntryController extends Controller
         });
 
         return $entryQuery;
+    }
+
+    public function export(Request $request)
+    {
+        $user = $request->user();
+        $search = $request->input('search');
+        $allEntries = $request->has('all_entries');
+
+        // Sorting parameters
+        $sort = $request->input('sort', 'created_at');
+        $direction = $request->input('direction', 'desc');
+
+        $allowedSorts = ['created_at', 'updated_at', 'appointments_count', 'total_duration'];
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        if (!in_array(strtolower($direction), ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        // Build query
+        $query = $this->buildQuery($user, $allEntries, $sort, $direction);
+
+        // Apply search filter
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereBlind('name', 'name_index', $search)
+                  ->orWhereBlind('lastname', 'lastname_index', $search)
+                  ->orWhereBlind('tel', 'tel_index', $search)
+                  ->orWhereBlind('email', 'email_index', $search);
+            });
+        }
+
+        $entries = $query->get();
+
+        return Excel::download(
+            new EntriesExport($entries),
+            'patients-'.now()->format('Y-m-d').'.xlsx'
+        );
     }
 }

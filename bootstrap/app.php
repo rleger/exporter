@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            '2fa.enabled' => \App\Http\Middleware\EnsureTwoFactorEnabled::class,
+            '2fa.challenge' => \App\Http\Middleware\RequireTwoFactorChallenge::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

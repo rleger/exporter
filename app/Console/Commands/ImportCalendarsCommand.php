@@ -135,20 +135,38 @@ class ImportCalendarsCommand extends Command
                     continue;
                 }
 
-                // Créer ou mettre à jour l'entrée
-                $entry = Entry::updateOrCreate(
-                    [
+                // Find existing entry using blind indexes (for encrypted fields)
+                $entry = Entry::query()
+                    ->where('calendar_id', $calendar->id)
+                    ->whereBlind('lastname', 'lastname_index', $lastname)
+                    ->whereBlind('name', 'name_index', $firstname)
+                    ->when($birthdate, function ($query) use ($birthdate) {
+                        // For birthdate, we compare the date value directly since it's not encrypted
+                        $query->whereDate('birthdate', $birthdate);
+                    }, function ($query) {
+                        $query->whereNull('birthdate');
+                    })
+                    ->first();
+
+                if ($entry) {
+                    // Update existing entry
+                    $entry->update([
+                        'tel'     => $tel,
+                        'email'   => $email,
+                        'subject' => $eventSubject,
+                    ]);
+                } else {
+                    // Create new entry
+                    $entry = Entry::create([
                         'calendar_id' => $calendar->id,
                         'lastname'    => $lastname,
                         'name'        => $firstname,
                         'birthdate'   => $birthdate,
-                    ],
-                    [
-                        'tel'     => $tel,
-                        'email'   => $email,
-                        'subject' => $eventSubject,
-                    ]
-                );
+                        'tel'         => $tel,
+                        'email'       => $email,
+                        'subject'     => $eventSubject,
+                    ]);
+                }
 
                 $this->info("Événement importé : {$firstname} {$lastname}");
                 Log::info('Événement importé', ['firstname' => $firstname, 'lastname' => $lastname]);

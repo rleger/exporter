@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
 use App\Traits\HasSubjectColors;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use ParagonIE\CipherSweet\BlindIndex;
+use ParagonIE\CipherSweet\EncryptedRow;
+use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
+use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
-class Entry extends Model
+class Entry extends Model implements CipherSweetEncrypted
 {
     use HasSubjectColors;
+    use UsesCipherSweet;
 
     protected $fillable = [
         'calendar_id',
@@ -19,6 +24,26 @@ class Entry extends Model
         'email',
         'subject',
     ];
+
+    public static function configureCipherSweet(EncryptedRow $encryptedRow): void
+    {
+        $encryptedRow
+            ->addField('name')
+            ->addBlindIndex('name', new BlindIndex('name_index', [], 32))
+            ->addField('lastname')
+            ->addBlindIndex('lastname', new BlindIndex('lastname_index', [], 32))
+            ->addOptionalTextField('tel')
+            ->addBlindIndex('tel', new BlindIndex('tel_index', [], 32))
+            ->addOptionalTextField('email')
+            ->addBlindIndex('email', new BlindIndex('email_index', [], 32));
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'birthdate' => 'date',
+        ];
+    }
 
     public function calendar()
     {
@@ -36,12 +61,11 @@ class Entry extends Model
     }
 
     /**
-     * Get only the canceled appointments.
+     * Get only the non-canceled appointments.
      */
     public function getNotCanceledAppointmentsAttribute()
     {
         return $this->appointments->filter(function ($app) {
-            // Use a case-insensitive check for 'annul'
             return !Str::contains(mb_strtolower($app->subject), 'annul');
         });
     }
@@ -52,13 +76,12 @@ class Entry extends Model
     public function getCanceledAppointmentsAttribute()
     {
         return $this->appointments->filter(function ($app) {
-            // Use a case-insensitive check for 'annul'
             return Str::contains(mb_strtolower($app->subject), 'annul');
         });
     }
 
     /**
-     * Compute the total canceled hours.
+     * Compute the total consultation hours.
      */
     public function getConsultationHoursAttribute()
     {
@@ -79,22 +102,12 @@ class Entry extends Model
 
     /**
      * Compute the canceled hours that were not replaced.
-     *
-     * For each canceled appointment, we check for a replacement appointment in the same calendar.
-     * A replacement is valid if:
-     *  - It is not the canceled appointment itself.
-     *  - Its start_date is at or before the canceled appointment's start_date.
-     *  - Its end_date is at or after the canceled appointment's end_date.
-     *  - It was created after the cancellation (i.e. after the canceled appointment’s updated_at).
-     *  - Its subject does NOT contain 'annul'.
      */
     public function getCanceledHoursNotReplacedAttribute()
     {
         return $this->canceled_appointments->sum(function ($cancelled) {
-            // Get the calendar id from the canceled appointment’s entry.
             $calendarId = $cancelled->entry->calendar->id;
 
-            // Check for a replacement appointment in the same calendar.
             $replacementExists = Appointment::whereHas('entry', function ($query) use ($calendarId) {
                 $query->where('calendar_id', $calendarId);
             })
@@ -105,7 +118,6 @@ class Entry extends Model
             ->where('subject', 'not like', '%annul%')
             ->exists();
 
-            // If a replacement exists, no time is "lost" for this cancellation.
             return $replacementExists ? 0 : $cancelled->duration_hours;
         });
     }
