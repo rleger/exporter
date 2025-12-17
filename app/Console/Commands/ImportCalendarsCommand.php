@@ -135,11 +135,11 @@ class ImportCalendarsCommand extends Command
                     continue;
                 }
 
-                // Find existing entry using blind indexes (for encrypted fields)
+                // Find existing entry using blind indexes (for encrypted fields, case-insensitive)
                 $entry = Entry::query()
                     ->where('calendar_id', $calendar->id)
-                    ->whereBlind('lastname', 'lastname_index', $lastname)
-                    ->whereBlind('name', 'name_index', $firstname)
+                    ->whereBlind('lastname', 'lastname_index', mb_strtolower($lastname))
+                    ->whereBlind('name', 'name_index', mb_strtolower($firstname))
                     ->when($birthdate, function ($query) use ($birthdate) {
                         // For birthdate, we compare the date value directly since it's not encrypted
                         $query->whereDate('birthdate', $birthdate);

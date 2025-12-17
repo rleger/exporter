@@ -35,13 +35,14 @@ class EntryController extends Controller
         // Build base query
         $query = $this->buildQuery($user, $allEntries, $sort, $direction);
 
-        // Apply search filter using blind indexes (exact match only)
+        // Apply search filter using blind indexes (exact match only, case-insensitive)
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->whereBlind('name', 'name_index', $search)
-                  ->orWhereBlind('lastname', 'lastname_index', $search)
+            $searchLower = mb_strtolower($search);
+            $query->where(function ($q) use ($search, $searchLower) {
+                $q->whereBlind('name', 'name_index', $searchLower)
+                  ->orWhereBlind('lastname', 'lastname_index', $searchLower)
                   ->orWhereBlind('tel', 'tel_index', $search)
-                  ->orWhereBlind('email', 'email_index', $search);
+                  ->orWhereBlind('email', 'email_index', $searchLower);
             });
         }
 
@@ -122,13 +123,14 @@ class EntryController extends Controller
         // Build query
         $query = $this->buildQuery($user, $allEntries, $sort, $direction);
 
-        // Apply search filter
+        // Apply search filter (case-insensitive)
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->whereBlind('name', 'name_index', $search)
-                  ->orWhereBlind('lastname', 'lastname_index', $search)
+            $searchLower = mb_strtolower($search);
+            $query->where(function ($q) use ($search, $searchLower) {
+                $q->whereBlind('name', 'name_index', $searchLower)
+                  ->orWhereBlind('lastname', 'lastname_index', $searchLower)
                   ->orWhereBlind('tel', 'tel_index', $search)
-                  ->orWhereBlind('email', 'email_index', $search);
+                  ->orWhereBlind('email', 'email_index', $searchLower);
             });
         }
 

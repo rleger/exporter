@@ -25,6 +25,24 @@ class Entry extends Model implements CipherSweetEncrypted
         'subject',
     ];
 
+    /**
+     * Normalize text fields to lowercase for case-insensitive search.
+     */
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['name'] = $value ? mb_strtolower($value) : $value;
+    }
+
+    public function setLastnameAttribute($value): void
+    {
+        $this->attributes['lastname'] = $value ? mb_strtolower($value) : $value;
+    }
+
+    public function setEmailAttribute($value): void
+    {
+        $this->attributes['email'] = $value ? mb_strtolower($value) : $value;
+    }
+
     public static function configureCipherSweet(EncryptedRow $encryptedRow): void
     {
         $encryptedRow
