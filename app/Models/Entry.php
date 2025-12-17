@@ -43,6 +43,22 @@ class Entry extends Model implements CipherSweetEncrypted
         $this->attributes['email'] = $value ? mb_strtolower($value) : $value;
     }
 
+    /**
+     * Format name for display: Firstname (title case)
+     */
+    public function getFormattedNameAttribute(): string
+    {
+        return $this->attributes['name'] ? mb_convert_case($this->attributes['name'], MB_CASE_TITLE, 'UTF-8') : '';
+    }
+
+    /**
+     * Format lastname for display: LASTNAME (uppercase)
+     */
+    public function getFormattedLastnameAttribute(): string
+    {
+        return $this->attributes['lastname'] ? mb_strtoupper($this->attributes['lastname']) : '';
+    }
+
     public static function configureCipherSweet(EncryptedRow $encryptedRow): void
     {
         $encryptedRow

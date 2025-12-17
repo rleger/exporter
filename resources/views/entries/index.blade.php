@@ -200,14 +200,14 @@
                                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                                                         <a class="text-gray-800 hover:text-gray-700 hover:underline"
                                                             href="{{ route('appointments.show', $entry->id) }}">
-                                                            {{ $entry->lastname }}
+                                                            {{ $entry->formatted_lastname }}
                                                         </a>
 
                                                     </td>
                                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                                                         <a class="text-gray-800 hover:text-gray-700 hover:underline"
                                                             href="{{ route('appointments.show', $entry->id) }}">
-                                                            {{ $entry->name }}
+                                                            {{ $entry->formatted_name }}
                                                         </a>
                                                     </td>
                                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

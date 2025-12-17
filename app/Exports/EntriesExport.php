@@ -42,8 +42,8 @@ class EntriesExport implements FromCollection, WithHeadings, WithMapping, Should
         $totalDuration = sprintf('%02d:%02d', $hours, $minutes);
 
         return [
-            $entry->lastname,
-            $entry->name,
+            $entry->formatted_lastname,
+            $entry->formatted_name,
             $entry->birthdate ? \Carbon\Carbon::parse($entry->birthdate)->format('d/m/Y') : '',
             $entry->email,
             $entry->tel,
