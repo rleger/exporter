@@ -17,8 +17,11 @@ return new class extends Migration
             return;
         }
 
-        // Disable foreign key checks temporarily for MySQL
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        // Disable foreign key checks temporarily (MySQL only)
+        $isMysql = DB::getDriverName() === 'mysql';
+        if ($isMysql) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
 
         // Try to drop unique constraint if it exists
         try {
@@ -29,7 +32,9 @@ return new class extends Migration
             // Constraint may not exist, continue
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if ($isMysql) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
 
         Schema::table('entries', function (Blueprint $table) {
             // Add blind index columns for searchable encrypted fields
