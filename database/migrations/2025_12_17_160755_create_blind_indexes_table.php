@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
+        if (Schema::hasTable('blind_indexes')) {
+            return;
+        }
+
         Schema::create('blind_indexes', function (Blueprint $table) {
             $table->morphs('indexable');
             $table->string('name');
