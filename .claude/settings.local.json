@@ -47,7 +47,8 @@
       "Bash(tests/Feature/TwoFactorAuthenticationTest.php)",
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd mandatory 2FA authentication and encrypted patient data\n\nSecurity enhancements:\n- Mandatory Two-Factor Authentication (TOTP + Passkeys/WebAuthn)\n- Field-level encryption for patient PII using CipherSweet\n- Excel export functionality for patient data\n\n2FA Features:\n- TOTP support with QR code setup (Google Authenticator, etc.)\n- Passkey/WebAuthn support (Touch ID, Face ID, Windows Hello, USB keys)\n- Backup codes for account recovery\n- Rate limiting on authentication attempts\n- Session-based 2FA challenge flow\n\nEncryption Features:\n- Encrypted fields: name, lastname, birthdate, email, tel\n- Blind indexes for exact-match search capability\n- Idempotent migrations for production safety\n- Built-in encryption command for existing data\n\nAdditional Changes:\n- Updated EntryController to use blind index search\n- Modified ImportCalendarsCommand for encrypted lookups\n- Added withTwoFactor() factory state for testing\n- 45 tests passing with full coverage\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit -m \"$(cat <<''EOF''\nFix tests using same database - use SQLite in-memory for tests\n\n- Enabled SQLite in-memory database in phpunit.xml\n- Made encryption migration database-agnostic (MySQL/SQLite compatible)\n- Tests no longer wipe the main development/production database\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   },
   "enabledMcpjsonServers": [
