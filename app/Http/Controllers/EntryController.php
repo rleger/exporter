@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\EntriesExport;
+use App\Exports\EntriesMultiSheetExport;
 use App\Models\Entry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,8 +144,16 @@ class EntryController extends Controller
 
         $entries = $query->get();
 
+        // Use multi-sheet export when exporting all users (to show duplicates)
+        if ($exportAllUsers) {
+            return Excel::download(
+                new EntriesMultiSheetExport($entries, true),
+                'patients-'.now()->format('Y-m-d').'.xlsx'
+            );
+        }
+
         return Excel::download(
-            new EntriesExport($entries, $exportAllUsers),
+            new EntriesExport($entries, false),
             'patients-'.now()->format('Y-m-d').'.xlsx'
         );
     }
