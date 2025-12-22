@@ -27,6 +27,10 @@
                     <x-nav-link :href="route('recap.index')" :active="request()->routeis('recap.index')">
                         {{ __('Recap') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('analytics.patients')" :active="request()->routeis('analytics.patients')">
+                        {{ __('Analytique') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -99,6 +103,10 @@
 
             <x-responsive-nav-link :href="route('recap.index')" :active="request()->routeis('recap.index')">
                 {{ __('Recap') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('analytics.patients')" :active="request()->routeis('analytics.patients')">
+                {{ __('Analytique') }}
             </x-responsive-nav-link>
         </div>
 

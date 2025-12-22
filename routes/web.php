@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PatientAnalyticsController;
 use Laragear\WebAuthn\Http\Routes as WebAuthnRoutes;
 
 Route::get('/', function () {
@@ -29,6 +30,8 @@ Route::middleware(['auth', '2fa.enabled'])->group(function () {
     Route::get('/entries/export', [EntryController::class, 'export'])->name('entries.export');
 
     Route::get('/recap', [RecapController::class, 'index'])->name('recap.index');
+
+    Route::get('/analytics/patients', [PatientAnalyticsController::class, 'index'])->name('analytics.patients');
 
     Route::post('/import-calendars', [DashboardController::class, 'importCalendars'])->name('import.calendars');
 
