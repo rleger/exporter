@@ -81,6 +81,12 @@ class EntryController extends Controller
                 'total_duration_minutes' => DB::table('appointments')
                     ->selectRaw('COALESCE(SUM(TIMESTAMPDIFF(MINUTE, start_date, end_date)), 0)')
                     ->whereColumn('appointments.entry_id', 'entries.id'),
+                'first_appointment_date' => DB::table('appointments')
+                    ->selectRaw('MIN(start_date)')
+                    ->whereColumn('appointments.entry_id', 'entries.id'),
+                'last_appointment_date' => DB::table('appointments')
+                    ->selectRaw('MAX(start_date)')
+                    ->whereColumn('appointments.entry_id', 'entries.id'),
             ]);
 
         if (!$allEntries) {
@@ -105,6 +111,7 @@ class EntryController extends Controller
         $user = $request->user();
         $search = $request->input('search');
         $allEntries = $request->has('all_entries');
+        $exportAllUsers = $request->has('export_all_users');
 
         // Sorting parameters
         $sort = $request->input('sort', 'created_at');
@@ -120,8 +127,8 @@ class EntryController extends Controller
             $direction = 'desc';
         }
 
-        // Build query
-        $query = $this->buildQuery($user, $allEntries, $sort, $direction);
+        // Build query - when exporting all users, fetch all entries regardless of user
+        $query = $this->buildQuery($user, $exportAllUsers || $allEntries, $sort, $direction);
 
         // Apply search filter (case-insensitive)
         if ($search) {
@@ -137,7 +144,7 @@ class EntryController extends Controller
         $entries = $query->get();
 
         return Excel::download(
-            new EntriesExport($entries),
+            new EntriesExport($entries, $exportAllUsers),
             'patients-'.now()->format('Y-m-d').'.xlsx'
         );
     }
