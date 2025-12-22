@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Calendar;
 use App\Models\Entry;
 use App\Models\User;
 use Carbon\Carbon;
@@ -28,15 +29,27 @@ class PatientAnalyticsController extends Controller
         $userComparison = $this->getUserComparison($sharedPatients);
         $summaryStats = $this->getSummaryStats($groupedPatients, $sharedPatients);
         $users = User::all();
+        $calendars = $this->getCalendarsWithStats();
 
-        return view('analytics.patients', compact(
+        return view('analytics.index', compact(
             'allPatients',
             'sharedPatients',
             'exclusivePatients',
             'userComparison',
             'summaryStats',
-            'users'
+            'users',
+            'calendars'
         ));
+    }
+
+    /**
+     * Get all calendars with entry counts.
+     */
+    protected function getCalendarsWithStats(): Collection
+    {
+        return Calendar::with('user')
+            ->withCount('entries')
+            ->get();
     }
 
     /**

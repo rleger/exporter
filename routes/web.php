@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
-use App\Http\Controllers\RecapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
@@ -29,9 +28,9 @@ Route::middleware(['auth', '2fa.enabled'])->group(function () {
     Route::get('/entries', [EntryController::class, 'index'])->name('entries.index');
     Route::get('/entries/export', [EntryController::class, 'export'])->name('entries.export');
 
-    Route::get('/recap', [RecapController::class, 'index'])->name('recap.index');
-
-    Route::get('/analytics/patients', [PatientAnalyticsController::class, 'index'])->name('analytics.patients');
+    Route::get('/analytics', [PatientAnalyticsController::class, 'index'])->name('analytics.index');
+    Route::redirect('/recap', '/analytics');
+    Route::redirect('/analytics/patients', '/analytics');
 
     Route::post('/import-calendars', [DashboardController::class, 'importCalendars'])->name('import.calendars');
 
