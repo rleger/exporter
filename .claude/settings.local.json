@@ -15,7 +15,9 @@
       "mcp__herd__start_debug_session",
       "mcp__herd__stop_debug_session",
       "mcp__laravel-boost__database-schema",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "mcp__laravel-boost__list-routes",
+      "mcp__laravel-boost__search-docs"
     ]
   },
   "enabledMcpjsonServers": [
